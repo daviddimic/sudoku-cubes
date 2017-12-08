@@ -40,8 +40,18 @@ void draw_table(double x, double y, double width){
 
 }
 
+/*crta crveni okvir tekuce pozicije na tabli*/
+static void draw_border(double x, double y, double size){
+    glColor3f(1, 0, 0);
+    glLineWidth(4);
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(x , -y);
+        glVertex2f(x + size, -y);
+        glVertex2f(x + size, -y - size);
+        glVertex2f(x , -y - size);
+    glEnd();
+}
 
-/*TODO zavrsiti*/
 void draw_numbers(int table[][9], int indx, int indy, double x, double y, double table_width){
 
     /*sirina i visina pojedinacne celije za broj*/
@@ -62,21 +72,25 @@ void draw_numbers(int table[][9], int indx, int indy, double x, double y, double
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++){
 
-            /*crvenim se boji broj u oznacenom polju*/
+            /*crvenim se boji okvir u oznacenom polju*/
             if(i == indy && j == indx){
-                glColor3f(1,0,0);
-                draw_digit(table[i][j], x, y, size);
+                draw_border(x - spaceX, -y - height_cell + spaceY, width_cell);
             }
-            else{
+
+            /*nule ne iscrtavamo*/
+            if(table[i][j]) {
                 glColor3f(0,0,0);
                 draw_digit(table[i][j], x, y, size);
             }
+
             x += width_cell;
         }
+        
         x = -1 + spaceX;
         y -= height_cell;
     }
 }
+
 
 void draw_digit(int number, double x, double y, double size){
 
