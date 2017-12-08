@@ -21,6 +21,7 @@ void draw_table(double x, double y, double width){
     /*linije unutar table*/
     for(int i = 1; i<9; i++){
         glLineWidth(1);
+        /*podebljana linija na svako trece*/
         if(i%3 == 0){
            glLineWidth(4);
        }
@@ -37,11 +38,44 @@ void draw_table(double x, double y, double width){
         glEnd();
     }
 
+}
 
 
-    //display the numbers
-    draw_digit(5, x + 0.005, y + 0.005, width_cell/2.5);
+/*TODO zavrsiti*/
+void draw_numbers(int table[][9], int indx, int indy, double x, double y, double table_width){
 
+    /*sirina i visina pojedinacne celije za broj*/
+    double width_cell = table_width/9.0;
+    double height_cell = table_width/9.0;
+
+    /* velicina broja */
+    double size = height_cell/3.0;
+
+    /* razmak unutar celije izmedju broja i ivica celije*/
+    double spaceX = (width_cell - size)/2.0;
+    double spaceY = (height_cell - 2*size)/2.0;
+
+    /*pocetne vrednost iscrtavanja brojeva*/
+    x = x + spaceX;
+    y = -y - height_cell + spaceY;
+
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++){
+
+            /*crvenim se boji broj u oznacenom polju*/
+            if(i == indy && j == indx){
+                glColor3f(1,0,0);
+                draw_digit(table[i][j], x, y, size);
+            }
+            else{
+                glColor3f(0,0,0);
+                draw_digit(table[i][j], x, y, size);
+            }
+            x += width_cell;
+        }
+        x = -1 + spaceX;
+        y -= height_cell;
+    }
 }
 
 void draw_digit(int number, double x, double y, double size){
