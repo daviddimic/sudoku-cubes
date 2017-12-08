@@ -1,6 +1,49 @@
 #include "sudoku_draw.h"
 #include <GL/glut.h>
 
+void draw_table(double x, double y, double width){
+
+    glColor3f(0, 0, 1);
+
+    /*okvir table*/
+    glColor3f(0, 0, 0);
+    glLineWidth(4);
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(x + 0, y + 0);
+        glVertex2f(x + width, y + 0);
+        glVertex2f(x + width, y + width);
+        glVertex2f(x + 0, y + width);
+    glEnd();
+
+    double width_cell = width/9.0;
+    double height_cell = width/9.0;
+
+    /*linije unutar table*/
+    for(int i = 1; i<9; i++){
+        glLineWidth(1);
+        if(i%3 == 0){
+           glLineWidth(4);
+       }
+        glBegin(GL_LINES);
+            glColor3f(0, 0, 0);
+            glVertex2f(x + i*width_cell, y + 0);
+            glVertex2f(x + i*width_cell, y + width);
+        glEnd();
+
+        glBegin(GL_LINES);
+            glColor3f(0, 0, 0);
+            glVertex2f(x + 0, y + i*height_cell);
+            glVertex2f(x + width, y + i*height_cell);
+        glEnd();
+    }
+
+
+
+    //display the numbers
+    draw_digit(5, x + 0.005, y + 0.005, width_cell/2.5);
+
+}
+
 void draw_digit(int number, double x, double y, double size){
 
     glLineWidth(50*size);
