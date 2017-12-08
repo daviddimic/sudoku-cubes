@@ -27,6 +27,7 @@
 *.lib
 
 # Executables
+sudoku
 *.exe
 *.out
 *.app
