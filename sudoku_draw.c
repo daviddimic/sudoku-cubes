@@ -1,7 +1,7 @@
 #include "sudoku_draw.h"
 #include <GL/glut.h>
 
-void draw_table(double x, double y, double width){
+void draw_grid(double x, double y, double width){
 
     glColor3f(0, 0, 1);
 
@@ -40,6 +40,7 @@ void draw_table(double x, double y, double width){
 
 }
 
+
 /*crta crveni okvir tekuce pozicije na tabli*/
 static void draw_border(double x, double y, double size){
     glColor3f(1, 0, 0);
@@ -52,9 +53,9 @@ static void draw_border(double x, double y, double size){
     glEnd();
 }
 
-void draw_numbers(int table[][9], int indx, int indy, double x, double y, double table_width){
 
-    /*sirina i visina pojedinacne celije za broj*/
+void draw_numbers(int table[][9], int indx, int indy, double x, double y, double table_width){
+    /* sirina i visina pojedinacne celije za broj*/
     double width_cell = table_width/9.0;
     double height_cell = table_width/9.0;
 
@@ -65,36 +66,36 @@ void draw_numbers(int table[][9], int indx, int indy, double x, double y, double
     double spaceX = (width_cell - size)/2.0;
     double spaceY = (height_cell - 2*size)/2.0;
 
-    /*pocetne vrednost iscrtavanja brojeva*/
-    x = x + spaceX;
-    y = -y - height_cell + spaceY;
+    /* pocetne vrednost iscrtavanja brojeva koje ce se menjati*/
+    double x_curr = x + spaceX;
+    double y_curr = (y + table_width) - height_cell + spaceY;
 
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++){
 
-            /*crvenim se boji okvir u oznacenom polju*/
+            /* crvenim se boji okvir u oznacenom polju*/
             if(i == indy && j == indx){
-                draw_border(x - spaceX, -y - height_cell + spaceY, width_cell);
+                draw_border(x_curr - spaceX, -y_curr - height_cell + spaceY, width_cell);
             }
 
-            /*nule ne iscrtavamo*/
+            /* nule ne iscrtavamo*/
             if(table[i][j]) {
                 glColor3f(0,0,0);
-                draw_digit(table[i][j], x, y, size);
+                draw_digit(table[i][j], x_curr, y_curr, size);
             }
 
-            x += width_cell;
+            x_curr += width_cell;
         }
-        
-        x = -1 + spaceX;
-        y -= height_cell;
+
+        x_curr = x + spaceX;
+        y_curr -= height_cell;
     }
 }
 
 
 void draw_digit(int number, double x, double y, double size){
 
-    glLineWidth(50*size);
+    glLineWidth(80*size);
 
     switch(number) {
         case 0:

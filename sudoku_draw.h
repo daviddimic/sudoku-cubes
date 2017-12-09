@@ -5,7 +5,7 @@
 void draw_digit(int number, double x, double y, double size);
 
 /* Iscrtava se tabla za igru sa donjim desnim uglom u x, y i sirinom width*/
-void draw_table(double x, double y, double width);
+void draw_grid(double x, double y, double width);
 
 /* Iscrtava sve brojeve prilagodjene tabli sirine table_width sa koordinatama u donjim desnim uglom x, y
     indx i indy je tekuce oznaceno polje */
