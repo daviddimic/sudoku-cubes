@@ -1,3 +1,8 @@
+/*
+* Osnovne funkcije za rad i resavanje jedne sudoku table
+* predstavljene kao matrica 9x9
+*/
+
 #ifndef SUDOKU_FUNC_H_
 #define  SUDOKU_FUNC_H_
 
@@ -14,6 +19,7 @@ enum level{
 
 void error(const char* msg);
 
+/*kopira sadrzaj table src u dest*/
 void copy_tables(const int src[][N], int dest[][N], const int n);
 
 /*ispisuje sudoku u konzoli na standardni izlaz*/
