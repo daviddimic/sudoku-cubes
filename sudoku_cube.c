@@ -16,37 +16,43 @@ void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
 }
 
 void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size){
+    /*FRONT*/
     glPushMatrix();
-        draw_table(tables[0].user, tables[0].indx, tables[0].indy, 0, 0, size);
+        draw_table(tables[FRONT].user, tables[FRONT].indx, tables[FRONT].indy, 0, 0, size);
     glPopMatrix();
 
+    /*BACK*/
     glPushMatrix();
         glTranslatef(size, 0, -size);
         glRotatef(180, 0, 1, 0);
-        draw_table(tables[1].user, tables[1].indx, tables[1].indy, 0, 0, size);
+        draw_table(tables[BACK].user, tables[BACK].indx, tables[BACK].indy, 0, 0, size);
     glPopMatrix();
 
+    /*RIGHT*/
     glPushMatrix();
         glTranslatef(size, 0, 0);
         glRotatef(90, 0, 1, 0);
-        draw_table(tables[2].user, tables[2].indx, tables[2].indy, 0, 0, size);
+        draw_table(tables[RIGHT].user, tables[RIGHT].indx, tables[RIGHT].indy, 0, 0, size);
     glPopMatrix();
 
+    /*LEFT*/
     glPushMatrix();
         glTranslatef(0, 0, -size);
         glRotatef(-90, 0, 1, 0);
         draw_table(tables[3].user, tables[3].indx, tables[3].indy, 0, 0, size);
     glPopMatrix();
 
+    /*DOWN*/
     glPushMatrix();
-        glTranslatef(0, 0, 0);
-        glRotatef(-90, 1, 0, 0);
-        draw_table(tables[4].user, tables[4].indx, tables[4].indy, 0, 0, size);
+        glTranslatef(0, 0, -size);
+        glRotatef(90, 1, 0, 0);
+        draw_table(tables[DOWN].user, tables[DOWN].indx, tables[DOWN].indy, 0, 0, size);
     glPopMatrix();
 
+    /*UP*/
     glPushMatrix();
         glTranslatef(0, size, 0);
         glRotatef(-90, 1, 0, 0);
-        draw_table(tables[5].user, tables[5].indx, tables[5].indy, 0, 0, size);
+        draw_table(tables[UP].user, tables[UP].indx, tables[UP].indy, 0, 0, size);
     glPopMatrix();
 }

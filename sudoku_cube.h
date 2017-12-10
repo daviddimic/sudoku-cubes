@@ -6,16 +6,18 @@
 /* broj tabli na kocki */
 #define NUM_TABLES 6
 
-/*TODO dodati*/
 enum position {
-    LEFT,
     FRONT,
-    RIGHT,
     BACK,
-    UP,
-    DOWN
+    RIGHT,
+    LEFT,
+    DOWN,
+    UP
 };
 
+/*  jedan sudoku mora cuvati tekuci koji korisnik resava i originalnu postavku
+ *  kao i poziciju na tabli gde se upisuje broj
+*/
 typedef struct {
     /*korisnicka tabla*/
     int user[N][N];
