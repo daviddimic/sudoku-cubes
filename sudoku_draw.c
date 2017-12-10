@@ -25,7 +25,7 @@ void draw_grid(double x, double y, double width){
 
     /*linije unutar table*/
     for(int i = 1; i < N; i++){
-        glLineWidth(1);
+        glLineWidth(2);
         /*podebljana linija na svako trece*/
         if(i%3 == 0){
            glLineWidth(4);

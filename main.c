@@ -104,7 +104,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
     /* resi sudoku, moze se primeniti help_number broj puta */
     case 'r':
         if(help_number > 0){
-            int a, b; /*ne sluze nicemu*/
+            int a, b; /*ne sluze nicemu, mora da se prosledi funkciji*/
             /* ako je tabla popunjena onda je sudoku vec resen */
             if(is_table_empty(tables[curr_table].original, N, &a, &b)){
                 /* resavamo sudoku i umanjujemo broj pomoci */
@@ -162,11 +162,29 @@ static void on_display(void) {
 
     glViewport(0, 0, window_width, window_height);
 
+    /* Podesava se projekcija. */
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+    gluPerspective(
+            60,
+            window_width/(float)window_height,
+            0.2, 5);
+
+    /* Podesava se tacka pogleda. */
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(
+            2, 2, 1,
+            1.1, 1, 0,
+            0, 1, 0);
 
 
+
+    glColor3f(1, 0, 1);
+    draw_cube(tables, NUM_TABLES, N, 1.2);
+
+/*
     double size = 0.46, space = 0.05;
-
 
     for (int i = 0; i < 3; i++) {
         draw_table(tables[i].user, tables[i].indx, tables[i].indy, -1 + i*(size + space), -1, size);
@@ -174,7 +192,7 @@ static void on_display(void) {
     for (int i = 0; i < 3; i++) {
         draw_table(tables[i + 3].user, tables[i + 3].indx, tables[i + 3].indy, -1+size+space, 1 - size - i*(size + space), size);
     }
+*/
 
-    /* Nova slika se salje na ekran. */
     glutSwapBuffers();
 }
