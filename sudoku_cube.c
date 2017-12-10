@@ -15,44 +15,44 @@ void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
     }
 }
 
-void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size){
+void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size, int curr_table){
     /*FRONT*/
     glPushMatrix();
-        draw_table(tables[FRONT].user, tables[FRONT].indx, tables[FRONT].indy, 0, 0, size);
+        draw_table(tables[FRONT].user, tables[FRONT].indx, tables[FRONT].indy, curr_table == FRONT,  0, 0, size);
     glPopMatrix();
 
     /*BACK*/
     glPushMatrix();
         glTranslatef(size, 0, -size);
         glRotatef(180, 0, 1, 0);
-        draw_table(tables[BACK].user, tables[BACK].indx, tables[BACK].indy, 0, 0, size);
+        draw_table(tables[BACK].user, tables[BACK].indx, tables[BACK].indy, curr_table == BACK, 0, 0, size);
     glPopMatrix();
 
     /*RIGHT*/
     glPushMatrix();
         glTranslatef(size, 0, 0);
         glRotatef(90, 0, 1, 0);
-        draw_table(tables[RIGHT].user, tables[RIGHT].indx, tables[RIGHT].indy, 0, 0, size);
+        draw_table(tables[RIGHT].user, tables[RIGHT].indx, tables[RIGHT].indy, curr_table == RIGHT, 0, 0, size);
     glPopMatrix();
 
     /*LEFT*/
     glPushMatrix();
         glTranslatef(0, 0, -size);
         glRotatef(-90, 0, 1, 0);
-        draw_table(tables[3].user, tables[3].indx, tables[3].indy, 0, 0, size);
+        draw_table(tables[LEFT].user, tables[LEFT].indx, tables[LEFT].indy, curr_table == LEFT, 0, 0, size);
     glPopMatrix();
 
     /*DOWN*/
     glPushMatrix();
         glTranslatef(0, 0, -size);
         glRotatef(90, 1, 0, 0);
-        draw_table(tables[DOWN].user, tables[DOWN].indx, tables[DOWN].indy, 0, 0, size);
+        draw_table(tables[DOWN].user, tables[DOWN].indx, tables[DOWN].indy, curr_table == DOWN, 0, 0, size);
     glPopMatrix();
 
     /*UP*/
     glPushMatrix();
         glTranslatef(0, size, 0);
         glRotatef(-90, 1, 0, 0);
-        draw_table(tables[UP].user, tables[UP].indx, tables[UP].indy, 0, 0, size);
+        draw_table(tables[UP].user, tables[UP].indx, tables[UP].indy, curr_table == UP, 0, 0, size);
     glPopMatrix();
 }

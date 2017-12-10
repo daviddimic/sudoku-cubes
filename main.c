@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include "sudoku_draw.h"
 #include "sudoku_cube.h"
+#include "sudoku_func.h"
 
 static int window_width, window_height;
 
@@ -150,6 +151,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
                 tables[curr_table].user[tables[curr_table].indy][tables[curr_table].indx] = number;
             }
         }
+
         break;
     }
     glutPostRedisplay();
@@ -179,7 +181,7 @@ static void on_display(void) {
             1.1, 1, 0,
             0, 1, 0);
 
-    draw_cube(tables, NUM_TABLES, N, 1.2);
+    draw_cube(tables, NUM_TABLES, N, 1.2, curr_table);
 
     glutSwapBuffers();
 }
