@@ -154,10 +154,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-static void draw_table(int table[][N], int indx, int indy, double x, double y, double width){
-    draw_numbers(table, indx, indy, x, y, width);
-    draw_grid(x, y, width);
-}
+
 
 static void on_display(void) {
     /* Brise se prethodni sadrzaj prozora. */

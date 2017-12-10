@@ -1,9 +1,14 @@
 #include "sudoku_draw.h"
 #include <GL/glut.h>
 
-void draw_grid(double x, double y, double width){
 
-    glColor3f(0, 0, 1);
+void draw_table(int table[][N], int indx, int indy, double x, double y, double width){
+    draw_numbers(table, indx, indy, x, y, width);
+    draw_grid(x, y, width);
+}
+
+
+void draw_grid(double x, double y, double width){
 
     /*okvir table*/
     glColor3f(0, 0, 0);
@@ -15,13 +20,11 @@ void draw_grid(double x, double y, double width){
         glVertex2f(x + 0, y + width);
     glEnd();
 
-
-
     double width_cell = width/9.0;
     double height_cell = width/9.0;
 
     /*linije unutar table*/
-    for(int i = 1; i<9; i++){
+    for(int i = 1; i < N; i++){
         glLineWidth(1);
         /*podebljana linija na svako trece*/
         if(i%3 == 0){
@@ -64,7 +67,7 @@ static void draw_border(double x, double y, double size){
 }
 
 
-void draw_numbers(int table[][9], int indx, int indy, double x, double y, double table_width){
+void draw_numbers(int table[][N], int indx, int indy, double x, double y, double table_width){
     /* sirina i visina pojedinacne celije za broj*/
     double width_cell = table_width/9.0;
     double height_cell = table_width/9.0;
@@ -80,8 +83,8 @@ void draw_numbers(int table[][9], int indx, int indy, double x, double y, double
     double x_curr = x + spaceX;
     double y_curr = (y + table_width) - height_cell + spaceY;
 
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++){
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++){
 
             /* crvenim se boji okvir u oznacenom polju*/
             if(i == indy && j == indx){
