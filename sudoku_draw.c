@@ -42,7 +42,7 @@ void draw_grid(double x, double y, double width){
 
     /*pozadnina table*/
     glColor3f(0.85, 0.85, 0.85);
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
         glVertex2f(x + 0, y + 0);
         glVertex2f(x + width, y + 0);
         glVertex2f(x + width, y + width);

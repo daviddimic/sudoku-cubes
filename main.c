@@ -166,10 +166,10 @@ static void on_display(void) {
     glViewport(0, 0, window_width, window_height);
 
     glLoadIdentity();
-/*
-    glTranslatef(0.05, 0.6, 0);
-*/
+
+
     double size = 0.46, space = 0.05;
+
 
     for (int i = 0; i < 3; i++) {
         draw_table(tables[i].user, tables[i].indx, tables[i].indy, -1 + i*(size + space), -1, size);
