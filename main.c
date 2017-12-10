@@ -9,10 +9,8 @@ static int window_width, window_height;
 /*broj koji se unosi sa tastature*/
 static unsigned number;
 
-
 /*tekuca tabla koja se resava*/
 static int curr_table = FRONT;
-
 
 /*niz tabli*/
 static T tables[NUM_TABLES];
@@ -144,11 +142,14 @@ static void on_keyboard(unsigned char key, int x, int y) {
     case '3': case '4': case '5':
     case '6': case '7': case '8':
     case '9':
-            number = key - '0';
-            /*ne moze se upisati broj ako dodje do konflikta brojeva*/
+        number = key - '0';
+        /* ne moze se promeniti polje iz originalne postavke */
+        if(!tables[curr_table].original[tables[curr_table].indy][tables[curr_table].indx]){
+            /* ne moze se upisati broj osim nule ako dodje do konflikta brojeva */
             if(!(number && is_conflict(tables[curr_table].user, N, number, tables[curr_table].indy, tables[curr_table].indx))){
                 tables[curr_table].user[tables[curr_table].indy][tables[curr_table].indx] = number;
             }
+        }
         break;
     }
     glutPostRedisplay();
@@ -178,21 +179,7 @@ static void on_display(void) {
             1.1, 1, 0,
             0, 1, 0);
 
-
-
-    glColor3f(1, 0, 1);
     draw_cube(tables, NUM_TABLES, N, 1.2);
-
-/*
-    double size = 0.46, space = 0.05;
-
-    for (int i = 0; i < 3; i++) {
-        draw_table(tables[i].user, tables[i].indx, tables[i].indy, -1 + i*(size + space), -1, size);
-    }
-    for (int i = 0; i < 3; i++) {
-        draw_table(tables[i + 3].user, tables[i + 3].indx, tables[i + 3].indy, -1+size+space, 1 - size - i*(size + space), size);
-    }
-*/
 
     glutSwapBuffers();
 }
