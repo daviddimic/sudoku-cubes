@@ -25,7 +25,7 @@ typedef struct {
     int indx, indy;
 } T;
 
-/*ucitava se niz tabli*/
+/* ucitava se sudoku kocka - niz tabli */
 void init_tables(T tables[NUM_TABLES], int n_tables, int n_table);
 
 

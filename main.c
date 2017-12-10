@@ -9,8 +9,10 @@ static int window_width, window_height;
 /*broj koji se unosi sa tastature*/
 static unsigned number;
 
+
 /*tekuca tabla koja se resava*/
 static int curr_table = FRONT;
+
 
 /*niz tabli*/
 static T tables[NUM_TABLES];
@@ -153,8 +155,8 @@ static void on_keyboard(unsigned char key, int x, int y) {
 }
 
 static void draw_table(int table[][N], int indx, int indy, double x, double y, double width){
-    draw_grid(x, y, width);
     draw_numbers(table, indx, indy, x, y, width);
+    draw_grid(x, y, width);
 }
 
 static void on_display(void) {

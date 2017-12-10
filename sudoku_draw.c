@@ -15,6 +15,8 @@ void draw_grid(double x, double y, double width){
         glVertex2f(x + 0, y + width);
     glEnd();
 
+
+
     double width_cell = width/9.0;
     double height_cell = width/9.0;
 
@@ -38,6 +40,14 @@ void draw_grid(double x, double y, double width){
         glEnd();
     }
 
+    /*pozadnina table*/
+    glColor3f(0.85, 0.85, 0.85);
+    glBegin(GL_POLYGON);
+        glVertex2f(x + 0, y + 0);
+        glVertex2f(x + width, y + 0);
+        glVertex2f(x + width, y + width);
+        glVertex2f(x + 0, y + width);
+    glEnd();
 }
 
 
@@ -95,7 +105,7 @@ void draw_numbers(int table[][9], int indx, int indy, double x, double y, double
 
 void draw_digit(int number, double x, double y, double size){
 
-    glLineWidth(80*size);
+    glLineWidth(100*size);
 
     switch(number) {
         case 0:
