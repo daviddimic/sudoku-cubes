@@ -21,9 +21,8 @@ static T tables[NUM_TABLES];
 static int help_number = 2;
 
 
-static double xAngle = 0;
-static double yAngle = 0;
-static double zAngle = 0;
+static float z_rotation, x_rotation;
+static int timer_active;
 
 static double zoomInOut = 0;
 
@@ -40,6 +39,10 @@ static void on_mouseclick(int button, int state, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void);
 
+static void on_timer(int value);
+static void on_timer2(int value);
+static void on_timer3(int value);
+static void on_timer4(int value);
 
 /*
 static enum position next_table(unsigned char key, enum position curr_table){
@@ -120,6 +123,11 @@ static void initialize(void) {
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_LINE_STIPPLE);
 
+    timer_active = 0;
+
+    x_rotation = 0;
+    z_rotation = 0;
+
     init_tables(tables, NUM_TABLES, N);
 }
 
@@ -142,6 +150,97 @@ static void on_specialkeys(int key, int x, int y){
     glutPostRedisplay();
 }
 
+static void set_timer(float *rotation, int *timer){
+    float eps = 0.01;
+
+    if(*rotation >= -eps && *rotation <= eps)
+        *timer = 0;
+
+    if(*rotation + 90 >= -eps && *rotation + 90 <= eps)
+        *timer = 0;
+
+    if(*rotation + 180 >= -eps && *rotation + 180 <= eps)
+        *timer = 0;
+
+    if(*rotation + 270 >= -eps && *rotation + 270 <= eps)
+        *timer = 0;
+
+    if(*rotation + 360 >= -eps && *rotation + 360 <= eps){
+        *timer = 0;
+        *rotation = 0;
+    }
+
+    if(*rotation - 90 >= -eps && *rotation - 90 <= eps)
+        *timer = 0;
+
+    if(*rotation - 180 >= -eps && *rotation - 180 <= eps)
+        *timer = 0;
+
+    if(*rotation - 270 >= -eps && *rotation - 270 <= eps)
+        *timer = 0;
+
+    if(*rotation - 360 >= -eps && *rotation - 360 <= eps){
+        *timer = 0;
+        *rotation = 0;
+    }
+
+}
+
+static void on_timer3(int value){
+    if (value != 0)
+        return;
+
+    z_rotation -= 10;
+    set_timer(&z_rotation, &timer_active);
+
+    glutPostRedisplay();
+
+    if (timer_active)
+        glutTimerFunc(50, on_timer3, 0);
+}
+
+/*W minus*/
+static void on_timer4(int value){
+    if (value != 0)
+        return;
+
+    x_rotation -= 10;
+    set_timer(&x_rotation, &timer_active);
+
+    glutPostRedisplay();
+
+    if (timer_active)
+        glutTimerFunc(50, on_timer4, 0);
+}
+
+static void on_timer2(int value){
+    if (value != 0)
+        return;
+
+    x_rotation += 10;
+    set_timer(&x_rotation, &timer_active);
+
+    glutPostRedisplay();
+
+    if (timer_active)
+        glutTimerFunc(50, on_timer2, 0);
+}
+
+static void on_timer(int value)
+{
+    /* Proverava se da li callback dolazi od odgovarajuceg tajmera. */
+    if (value != 0)
+        return;
+
+    z_rotation += 10;
+
+    set_timer(&z_rotation, &timer_active);
+
+    glutPostRedisplay();
+
+    if (timer_active)
+        glutTimerFunc(50, on_timer, 0);
+}
 
 static void on_keyboard(unsigned char key, int x, int y) {
     /* izlaz iz programa ESC */
@@ -177,18 +276,38 @@ static void on_keyboard(unsigned char key, int x, int y) {
      *  okrecemo kocku na wsad
         TODO
      */
-    case 'w':
-        xAngle += 10;
-        break;
-    case 's':
-        xAngle -= 10;
-        break;
-    case 'a':
-        yAngle += 10;
-        break;
     case 'd':
-        yAngle -= 10;
-        break;
+         /* Pokrece se simulacija u desno. */
+         if (!timer_active) {
+             glutTimerFunc(50, on_timer3, 0);
+             timer_active = 1;
+         }
+         break;
+
+    case 'a':
+         /* Pokrece se simulacija. */
+         if (!timer_active) {
+             glutTimerFunc(50, on_timer, 0);
+             timer_active = 1;
+         }
+         break;
+
+     case 'w':
+         /* Pokrece se simulacija u desno. */
+         if (!timer_active) {
+             glutTimerFunc(50, on_timer2, 0);
+             timer_active = 1;
+         }
+         break;
+
+    case 's':
+         /* Pokrece se simulacija. */
+         if (!timer_active) {
+             glutTimerFunc(50, on_timer4, 0);
+             timer_active = 1;
+         }
+         break;
+
 
     /* pomeranje kamere, zoomIn, zoomOut */
     case '+':
@@ -253,14 +372,14 @@ static void on_display(void) {
 
 
     glPushMatrix ();
-      glRotatef (zAngle, 0, 0, 1);
-      glRotatef (yAngle, 0, 1, 0);
-      glRotatef (xAngle, 1, 0, 0);
-      /*pomeranje u (0, 0, 0)*/
-      glTranslatef(-size/2.0, -size/2, size/2);
-      draw_cube(tables, NUM_TABLES, N, size, curr_table);
+        glRotatef(x_rotation, 1, 0, 0);
+        glRotatef(z_rotation, 0, 1, 0);
+      /* pomeranje u (0, 0, 0)*/
+        glTranslatef(-size/2.0, -size/2, size/2);
+        draw_cube(tables, NUM_TABLES, N, size, curr_table);
     glPopMatrix ();
 
+    /* ako smo u kocki */
     if(zoomInOut >= -1.5 && zoomInOut <= -0.8){
         draw_text("Dude, GET OUT!", 400, 400);
     }

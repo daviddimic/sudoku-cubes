@@ -1,8 +1,8 @@
-#include "sudoku_draw.h"
 #include <GL/glut.h>
+#include "sudoku_draw.h"
 
 
-void draw_table(int table[][N], int indx, int indy, int border, double x, double y, double width){
+void draw_table(const int table[][N], int indx, int indy, int border, double x, double y, double width){
     draw_numbers(table, indx, indy, border, x, y, width);
     draw_grid(x, y, width);
 }
@@ -67,7 +67,7 @@ static void draw_border(double x, double y, double size){
 }
 
 
-void draw_numbers(int table[][N], int indx, int indy, int border, double x, double y, double table_width){
+void draw_numbers(const int table[][N], int indx, int indy, int border, double x, double y, double table_width){
     /* sirina i visina pojedinacne celije za broj*/
     double width_cell = table_width/9.0;
     double height_cell = table_width/9.0;
@@ -106,7 +106,7 @@ void draw_numbers(int table[][N], int indx, int indy, int border, double x, doub
 }
 
 
-void draw_digit(int number, double x, double y, double size){
+void draw_digit(const int number, double x, double y, double size){
 
     glLineWidth(150*size);
 

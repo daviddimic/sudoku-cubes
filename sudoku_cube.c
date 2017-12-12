@@ -1,8 +1,8 @@
+#include <string.h>
+#include <GL/glut.h>
 #include "sudoku_cube.h"
 #include "sudoku_func.h"
 #include "sudoku_draw.h"
-#include <GL/glut.h>
-#include <string.h>
 
 
 
@@ -74,7 +74,7 @@ void draw_text(const char* text, double x, double y){
         glRasterPos2f(x,y);
         int len = strlen(text);
         for(int i = 0; i < len; i++){
-            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]);//GLUT_BITMAP_9_BY_15,text);
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]);
         }
     glPopMatrix();
 
