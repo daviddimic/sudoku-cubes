@@ -2,6 +2,7 @@
 #include "sudoku_func.h"
 #include "sudoku_draw.h"
 #include <GL/glut.h>
+#include <string.h>
 
 
 
@@ -55,4 +56,29 @@ void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size, int
         glRotatef(-90, 1, 0, 0);
         draw_table(tables[UP].user, tables[UP].indx, tables[UP].indy, curr_table == UP, 0, 0, size);
     glPopMatrix();
+}
+
+
+void draw_text(const char* text, double x, double y){
+    glColor3f(1, 0, 0);
+    glMatrixMode(GL_PROJECTION);
+    double matrix[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, matrix);
+    glLoadIdentity();
+    glOrtho(0, 800, 0, 800, -5, 5);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glPushMatrix();
+        glLoadIdentity();
+        glRasterPos2f(x,y);
+        int len = strlen(text);
+        for(int i = 0; i < len; i++){
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]);//GLUT_BITMAP_9_BY_15,text);
+        }
+    glPopMatrix();
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixd(matrix);
+    glMatrixMode(GL_MODELVIEW);
 }

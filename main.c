@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <GL/glut.h>
 #include "sudoku_draw.h"
 #include "sudoku_cube.h"
@@ -7,27 +8,79 @@
 
 static int window_width, window_height;
 
-/*broj koji se unosi sa tastature*/
+/* broj koji se unosi sa tastature */
 static unsigned number;
 
-/*tekuca tabla koja se resava*/
+/* tekuca tabla koja se resava */
 static int curr_table = FRONT;
 
-/*niz tabli*/
+/* niz tabli */
 static T tables[NUM_TABLES];
 
-/*broj pomoci za resavanje sudoku*/
+/* broj pomoci za resavanje sudoku */
 static int help_number = 2;
 
 
-/* funkcija initalize vrsi OpenGL inicijalizaciju. */
+static double xAngle = 0;
+static double yAngle = 0;
+static double zAngle = 0;
+
+static double zoomInOut = 0;
+
+
+/* OpenGL inicijalizacija */
 static void initialize(void);
 
-/* deklaracije callback funkcija. */
+/* deklaracije callback funkcija */
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_specialkeys(int key, int x, int y);
+/* TODO unos cifara
+static void on_mouseclick(int button, int state, int x, int y);
+*/
 static void on_reshape(int width, int height);
 static void on_display(void);
+
+
+/*
+static enum position next_table(unsigned char key, enum position curr_table){
+    switch (curr_table) {
+
+        case FRONT:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return LEFT;
+                case 'd': return RIGHT;
+            }
+
+        case RIGHT:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return FRONT;
+                case 'd': return BACK;
+            }
+
+        case LEFT:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return BACK;
+                case 'd': return FRONT;
+            }
+
+        case UP:
+            switch (key) {
+                case 'w': return BACK;
+                case 's': return FRONT;
+                case 'a': return LEFT;
+                case 'd': return RIGHT;
+            }
+        //TODO
+        default: return FRONT;
+    }
+}
+*/
 
 
 int main(int argc, char** argv) {
@@ -41,6 +94,9 @@ int main(int argc, char** argv) {
 
     glutKeyboardFunc(on_keyboard);
     glutSpecialFunc(on_specialkeys);
+    /*
+    glutMouseFunc(on_mouseclick);
+    */
     glutReshapeFunc(on_reshape);
     glutDisplayFunc(on_display);
 
@@ -59,6 +115,10 @@ static void on_reshape(int width, int height) {
 static void initialize(void) {
     glClearColor(0.75, 0.75, 0.75, 0);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_LINE_STIPPLE);
 
     init_tables(tables, NUM_TABLES, N);
 }
@@ -90,11 +150,6 @@ static void on_keyboard(unsigned char key, int x, int y) {
         exit(0);
         break;
 
-    /* na tekucem polju vraca stara vrednost iz originalne table */
-    case '-':
-        tables[curr_table].user[tables[curr_table].indy][tables[curr_table].indx] = tables[curr_table].original[tables[curr_table].indy][tables[curr_table].indx];
-        break;
-
     /* celu tablu vraca na pocetnu */
     case 'q':
         copy_tables(tables[curr_table].original, tables[curr_table].user, N);
@@ -123,16 +178,25 @@ static void on_keyboard(unsigned char key, int x, int y) {
         TODO
      */
     case 'w':
+        xAngle += 10;
         break;
     case 's':
+        xAngle -= 10;
         break;
     case 'a':
-        curr_table = (curr_table + 1) % 3;
+        yAngle += 10;
         break;
     case 'd':
-        curr_table = curr_table - 1 < 0 ? 2 : (curr_table - 1) % 3;
+        yAngle -= 10;
         break;
 
+    /* pomeranje kamere, zoomIn, zoomOut */
+    case '+':
+        zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
+        break;
+    case '-':
+        zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
+        break;
 
     case ' ':
         curr_table = (curr_table + 1) % NUM_TABLES;
@@ -159,8 +223,9 @@ static void on_keyboard(unsigned char key, int x, int y) {
 
 
 
+
 static void on_display(void) {
-    /* Brise se prethodni sadrzaj prozora. */
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glViewport(0, 0, window_width, window_height);
@@ -173,15 +238,37 @@ static void on_display(void) {
             window_width/(float)window_height,
             0.2, 5);
 
+
+
     /* Podesava se tacka pogleda. */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
-            2, 2, 1,
-            1.1, 1, 0,
+            1 + zoomInOut, 0.8 + zoomInOut, 1.5 + zoomInOut,
+            0, 0, 0,
             0, 1, 0);
 
-    draw_cube(tables, NUM_TABLES, N, 1.2, curr_table);
+    /* velicina kocke */
+    double size = 1;
+
+
+    glPushMatrix ();
+      glRotatef (zAngle, 0, 0, 1);
+      glRotatef (yAngle, 0, 1, 0);
+      glRotatef (xAngle, 1, 0, 0);
+      /*pomeranje u (0, 0, 0)*/
+      glTranslatef(-size/2.0, -size/2, size/2);
+      draw_cube(tables, NUM_TABLES, N, size, curr_table);
+    glPopMatrix ();
+
+    if(zoomInOut >= -1.5 && zoomInOut <= -0.8){
+        draw_text("Dude, GET OUT!", 400, 400);
+    }
+
+    char help_str[7] = "help: ";
+    sprintf(help_str + strlen(help_str), "%d" , help_number);
+    draw_text(help_str, 10, 25);
+
 
     glutSwapBuffers();
 }
