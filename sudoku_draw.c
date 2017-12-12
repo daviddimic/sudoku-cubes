@@ -57,7 +57,7 @@ void draw_grid(double x, double y, double width){
 /*crta crveni okvir tekuce pozicije na tabli*/
 static void draw_border(double x, double y, double size){
     glColor3f(1, 0, 0);
-    glLineWidth(4);
+    glLineWidth(5);
     glBegin(GL_LINE_LOOP);
         glVertex2f(x , -y);
         glVertex2f(x + size, -y);
@@ -108,7 +108,7 @@ void draw_numbers(int table[][N], int indx, int indy, int border, double x, doub
 
 void draw_digit(int number, double x, double y, double size){
 
-    glLineWidth(100*size);
+    glLineWidth(150*size);
 
     switch(number) {
         case 0:
