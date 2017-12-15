@@ -11,11 +11,6 @@
 /*dimenzija sudoku table*/
 #define N 9
 
-enum level{
-    EASY,
-    MEDIUM,
-    HARD
-};
 
 void error(const char* msg);
 
@@ -28,8 +23,8 @@ void print_sudoku(const int tabla[][N], const int n);
 /*ucitava sudoku iz datoteke*/
 void read_from_file(int tabla[][N], int n, const char* datPath);
 
-/*TODO generise sudoku popunjenosti [0,1] gde je 0 najmanje popunjeno, a 1 najvise*/
-void generate_random_start(int tabla[][N], int n, enum level tezina);
+/*generise sudoku sa brojem praznih mesta num_empty */
+void generate_rand_sudoku(int table[][N], const int n, const int num_empty);
 
 /*vraca true ako na vrsti, koloni ili bloku 3x3 dodje do konflikta*/
 bool is_conflict(const int tabla[][N], const int n, const int elem, const int i, const int j);

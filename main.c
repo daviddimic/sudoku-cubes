@@ -21,9 +21,10 @@ static T tables[NUM_TABLES];
 static int help_number = 2;
 
 
-static float z_rotation, x_rotation;
+static float y_rotation, x_rotation;
 static int timer_active;
 
+/* priblizavanje i udaljavanje pogleda na kocku */
 static double zoomInOut = 0;
 
 
@@ -44,10 +45,10 @@ static void on_timer2(int value);
 static void on_timer3(int value);
 static void on_timer4(int value);
 
-/*
-static enum position next_table(unsigned char key, enum position curr_table){
-    switch (curr_table) {
 
+static enum position next_table(unsigned char key, enum position curr_table){
+
+    switch (curr_table) {
         case FRONT:
             switch (key) {
                 case 'w': return UP;
@@ -76,14 +77,28 @@ static enum position next_table(unsigned char key, enum position curr_table){
             switch (key) {
                 case 'w': return BACK;
                 case 's': return FRONT;
-                case 'a': return LEFT;
-                case 'd': return RIGHT;
+                case 'a':
+                case 'd': return UP;
             }
-        //TODO
+
+        case DOWN:
+            switch (key) {
+                case 'w': return FRONT;
+                case 's': return BACK;
+                case 'a':
+                case 'd': return DOWN;
+            }
+        case BACK:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return RIGHT;
+                case 'd': return LEFT;
+            }
         default: return FRONT;
     }
 }
-*/
+
 
 
 int main(int argc, char** argv) {
@@ -126,7 +141,7 @@ static void initialize(void) {
     timer_active = 0;
 
     x_rotation = 0;
-    z_rotation = 0;
+    y_rotation = 0;
 
     init_tables(tables, NUM_TABLES, N);
 }
@@ -190,8 +205,8 @@ static void on_timer3(int value){
     if (value != 0)
         return;
 
-    z_rotation -= 10;
-    set_timer(&z_rotation, &timer_active);
+    y_rotation -= 10;
+    set_timer(&y_rotation, &timer_active);
 
     glutPostRedisplay();
 
@@ -228,17 +243,16 @@ static void on_timer2(int value){
 
 static void on_timer(int value)
 {
-    /* Proverava se da li callback dolazi od odgovarajuceg tajmera. */
-    if (value != 0)
+    if(value != 0)
         return;
 
-    z_rotation += 10;
+    y_rotation += 10;
 
-    set_timer(&z_rotation, &timer_active);
+    set_timer(&y_rotation, &timer_active);
 
     glutPostRedisplay();
 
-    if (timer_active)
+    if(timer_active)
         glutTimerFunc(50, on_timer, 0);
 }
 
@@ -277,36 +291,36 @@ static void on_keyboard(unsigned char key, int x, int y) {
         TODO
      */
     case 'd':
-         /* Pokrece se simulacija u desno. */
          if (!timer_active) {
+             curr_table = next_table(key, curr_table);
              glutTimerFunc(50, on_timer3, 0);
              timer_active = 1;
          }
          break;
 
     case 'a':
-         /* Pokrece se simulacija. */
-         if (!timer_active) {
-             glutTimerFunc(50, on_timer, 0);
-             timer_active = 1;
-         }
-         break;
+        if (!timer_active) {
+            curr_table = next_table(key, curr_table);
+            glutTimerFunc(50, on_timer, 0);
+            timer_active = 1;
+        }
+        break;
 
      case 'w':
-         /* Pokrece se simulacija u desno. */
-         if (!timer_active) {
-             glutTimerFunc(50, on_timer2, 0);
-             timer_active = 1;
-         }
-         break;
+        if (!timer_active) {
+            curr_table = next_table(key, curr_table);
+            glutTimerFunc(50, on_timer2, 0);
+            timer_active = 1;
+        }
+        break;
 
     case 's':
-         /* Pokrece se simulacija. */
-         if (!timer_active) {
-             glutTimerFunc(50, on_timer4, 0);
-             timer_active = 1;
-         }
-         break;
+        if (!timer_active) {
+            curr_table = next_table(key, curr_table);
+            glutTimerFunc(50, on_timer4, 0);
+            timer_active = 1;
+        }
+        break;
 
 
     /* pomeranje kamere, zoomIn, zoomOut */
@@ -370,11 +384,11 @@ static void on_display(void) {
     /* velicina kocke */
     double size = 1;
 
+    glRotatef(x_rotation, 1, 0, 0);
+    glRotatef(y_rotation, 0, 1, 0);
 
     glPushMatrix ();
-        glRotatef(x_rotation, 1, 0, 0);
-        glRotatef(z_rotation, 0, 1, 0);
-      /* pomeranje u (0, 0, 0)*/
+        /* pomeranje u (0, 0, 0)*/
         glTranslatef(-size/2.0, -size/2, size/2);
         draw_cube(tables, NUM_TABLES, N, size, curr_table);
     glPopMatrix ();
