@@ -166,8 +166,6 @@ static void shuffle(int * array, int length)
 {
     int i, r;
 
-    srand((unsigned int)time(NULL));
-
     for (i = length - 1; i > 0; i--) {
         r = rand() % (i + 1);
         swap(&array[i], &array[r]);

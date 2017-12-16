@@ -11,9 +11,9 @@ void draw_grid(double x, double y, double width);
 
 /* Iscrtava sve brojeve prilagodjene tabli sirine table_width sa koordinatama u donjim desnim uglom x, y
     indx i indy je tekuce oznaceno polje */
-void draw_numbers(const int table[][N], int indx, int indy, int border, double x, double y, double table_width);
+void draw_numbers(const int table[][N], int indx, int indy, int border, double x, double y, double table_width, double r, double g, double b);
 
 /* Iscrtava se tabla: brojevi i mreza */
-void draw_table(const int table[][N], int indx, int indy, int border, double x, double y, double width);
+void draw_table(const int table[][N], int indx, int indy, int border, double x, double y, double width, double r, double g, double b);
 
 #endif /*SUDOKU_DRAW_H_*/

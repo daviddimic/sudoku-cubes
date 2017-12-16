@@ -2,8 +2,8 @@
 #include "sudoku_draw.h"
 
 
-void draw_table(const int table[][N], int indx, int indy, int border, double x, double y, double width){
-    draw_numbers(table, indx, indy, border, x, y, width);
+void draw_table(const int table[][N], int indx, int indy, int border, double x, double y, double width, double r, double g, double b){
+    draw_numbers(table, indx, indy, border, x, y, width, r, g, b);
     draw_grid(x, y, width);
 }
 
@@ -56,9 +56,10 @@ void draw_grid(double x, double y, double width){
 
 /*crta crveni okvir tekuce pozicije na tabli*/
 static void draw_border(double x, double y, double size){
-    glColor3f(1, 0, 0);
+
     glLineWidth(5);
     glBegin(GL_LINE_LOOP);
+        glColor3f(1, 0, 0);
         glVertex2f(x , -y);
         glVertex2f(x + size, -y);
         glVertex2f(x + size, -y - size);
@@ -67,7 +68,7 @@ static void draw_border(double x, double y, double size){
 }
 
 
-void draw_numbers(const int table[][N], int indx, int indy, int border, double x, double y, double table_width){
+void draw_numbers(const int table[][N], int indx, int indy, int border, double x, double y, double table_width, double r, double g, double b){
     /* sirina i visina pojedinacne celije za broj*/
     double width_cell = table_width/9.0;
     double height_cell = table_width/9.0;
@@ -93,7 +94,7 @@ void draw_numbers(const int table[][N], int indx, int indy, int border, double x
 
             /* nule ne iscrtavamo*/
             if(table[i][j]) {
-                glColor3f(0,0,0);
+                glColor3f(r, g, b);
                 draw_digit(table[i][j], x_curr, y_curr, size);
             }
 

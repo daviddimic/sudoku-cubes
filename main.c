@@ -20,8 +20,9 @@ static T tables[NUM_TABLES];
 /* broj pomoci za resavanje sudoku */
 static int help_number = 2;
 
-
+/* uglovi rotacije kocke */
 static float y_rotation, x_rotation;
+
 static int timer_active;
 
 /* priblizavanje i udaljavanje pogleda na kocku */
@@ -37,10 +38,10 @@ static void on_specialkeys(int key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void);
 
-static void on_timer(int value);
-static void on_timer2(int value);
-static void on_timer3(int value);
-static void on_timer4(int value);
+static void on_timer_a(int value);
+static void on_timer_w(int value);
+static void on_timer_d(int value);
+static void on_timer_s(int value);
 
 
 int main(int argc, char** argv) {
@@ -140,7 +141,7 @@ static void set_timer(float *rotation, int *timer){
 
 }
 
-static void on_timer3(int value){
+static void on_timer_d(int value){
     if (value != 0)
         return;
 
@@ -150,11 +151,10 @@ static void on_timer3(int value){
     glutPostRedisplay();
 
     if (timer_active)
-        glutTimerFunc(50, on_timer3, 0);
+        glutTimerFunc(50, on_timer_d, 0);
 }
 
-/*W minus*/
-static void on_timer4(int value){
+static void on_timer_s(int value){
     if (value != 0)
         return;
 
@@ -164,10 +164,10 @@ static void on_timer4(int value){
     glutPostRedisplay();
 
     if (timer_active)
-        glutTimerFunc(50, on_timer4, 0);
+        glutTimerFunc(50, on_timer_s, 0);
 }
 
-static void on_timer2(int value){
+static void on_timer_w(int value){
     if (value != 0)
         return;
 
@@ -177,10 +177,10 @@ static void on_timer2(int value){
     glutPostRedisplay();
 
     if (timer_active)
-        glutTimerFunc(50, on_timer2, 0);
+        glutTimerFunc(50, on_timer_w, 0);
 }
 
-static void on_timer(int value)
+static void on_timer_a(int value)
 {
     if(value != 0)
         return;
@@ -192,12 +192,13 @@ static void on_timer(int value)
     glutPostRedisplay();
 
     if(timer_active)
-        glutTimerFunc(50, on_timer, 0);
+        glutTimerFunc(50, on_timer_a, 0);
 }
 
 static void on_keyboard(unsigned char key, int x, int y) {
-    /* izlaz iz programa ESC */
+
     switch (key) {
+        /* izlaz iz programa ESC */
         case 27: exit(0);
         break;
 
@@ -232,7 +233,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
         case 'd':
         if (!timer_active) {
             curr_table = next_table(key, curr_table);
-            glutTimerFunc(50, on_timer3, 0);
+            glutTimerFunc(50, on_timer_d, 0);
             timer_active = 1;
         }
         break;
@@ -240,23 +241,23 @@ static void on_keyboard(unsigned char key, int x, int y) {
         case 'a':
         if (!timer_active) {
             curr_table = next_table(key, curr_table);
-            glutTimerFunc(50, on_timer, 0);
+            glutTimerFunc(50, on_timer_a, 0);
             timer_active = 1;
         }
         break;
 
         case 'w':
-        if (!timer_active) {
+        if (!timer_active && curr_table != UP) {
             curr_table = next_table(key, curr_table);
-            glutTimerFunc(50, on_timer2, 0);
+            glutTimerFunc(50, on_timer_w, 0);
             timer_active = 1;
         }
         break;
 
         case 's':
-        if (!timer_active) {
+        if (!timer_active && curr_table != DOWN) {
             curr_table = next_table(key, curr_table);
-            glutTimerFunc(50, on_timer4, 0);
+            glutTimerFunc(50, on_timer_s, 0);
             timer_active = 1;
         }
         break;
