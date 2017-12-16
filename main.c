@@ -34,9 +34,6 @@ static void initialize(void);
 /* deklaracije callback funkcija */
 static void on_keyboard(unsigned char key, int x, int y);
 static void on_specialkeys(int key, int x, int y);
-/* TODO unos cifara
-static void on_mouseclick(int button, int state, int x, int y);
-*/
 static void on_reshape(int width, int height);
 static void on_display(void);
 
@@ -112,9 +109,6 @@ int main(int argc, char** argv) {
 
     glutKeyboardFunc(on_keyboard);
     glutSpecialFunc(on_specialkeys);
-    /*
-    glutMouseFunc(on_mouseclick);
-    */
     glutReshapeFunc(on_reshape);
     glutDisplayFunc(on_display);
 
@@ -259,17 +253,16 @@ static void on_timer(int value)
 static void on_keyboard(unsigned char key, int x, int y) {
     /* izlaz iz programa ESC */
     switch (key) {
-    case 27:
-        exit(0);
+        case 27: exit(0);
         break;
 
-    /* celu tablu vraca na pocetnu */
-    case 'q':
-        copy_tables(tables[curr_table].original, tables[curr_table].user, N);
+        /* celu tablu vraca na pocetnu */
+        case 'q':
+            copy_tables(tables[curr_table].original, tables[curr_table].user, N);
         break;
 
-    /* resi sudoku, moze se primeniti help_number broj puta */
-    case 'r':
+        /* resi sudoku, moze se primeniti help_number broj puta */
+        case 'r':
         if(help_number > 0){
             int a, b; /*ne sluze nicemu, mora da se prosledi funkciji*/
             /* ako je tabla popunjena onda je sudoku vec resen */
@@ -286,19 +279,19 @@ static void on_keyboard(unsigned char key, int x, int y) {
         }
         break;
 
-    /*  krecemo se kroz razlicite sudoku table
-     *  okrecemo kocku na wsad
+        /*  krecemo se kroz razlicite sudoku table
+        *  okrecemo kocku na wsad
         TODO
-     */
-    case 'd':
-         if (!timer_active) {
-             curr_table = next_table(key, curr_table);
-             glutTimerFunc(50, on_timer3, 0);
-             timer_active = 1;
-         }
-         break;
+        */
+        case 'd':
+        if (!timer_active) {
+            curr_table = next_table(key, curr_table);
+            glutTimerFunc(50, on_timer3, 0);
+            timer_active = 1;
+        }
+        break;
 
-    case 'a':
+        case 'a':
         if (!timer_active) {
             curr_table = next_table(key, curr_table);
             glutTimerFunc(50, on_timer, 0);
@@ -306,7 +299,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
         }
         break;
 
-     case 'w':
+        case 'w':
         if (!timer_active) {
             curr_table = next_table(key, curr_table);
             glutTimerFunc(50, on_timer2, 0);
@@ -314,7 +307,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
         }
         break;
 
-    case 's':
+        case 's':
         if (!timer_active) {
             curr_table = next_table(key, curr_table);
             glutTimerFunc(50, on_timer4, 0);
@@ -323,23 +316,21 @@ static void on_keyboard(unsigned char key, int x, int y) {
         break;
 
 
-    /* pomeranje kamere, zoomIn, zoomOut */
-    case '+':
-        zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
+        /* pomeranje kamere, zoomIn, zoomOut */
+        case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
         break;
-    case '-':
-        zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
+        case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
         break;
 
-    case ' ':
-        curr_table = (curr_table + 1) % NUM_TABLES;
+        /*TODO izbaciti rucno pomeranje*/
+        case ' ': curr_table = (curr_table + 1) % NUM_TABLES;
         break;
 
-    /* unos brojeva u tekucu tablu */
-    case '0': case '1': case '2':
-    case '3': case '4': case '5':
-    case '6': case '7': case '8':
-    case '9':
+        /* unos brojeva u tekucu tablu */
+        case '0': case '1': case '2':
+        case '3': case '4': case '5':
+        case '6': case '7': case '8':
+        case '9':
         number = key - '0';
         /* ne moze se promeniti polje iz originalne postavke */
         if(!tables[curr_table].original[tables[curr_table].indy][tables[curr_table].indx]){
@@ -348,13 +339,10 @@ static void on_keyboard(unsigned char key, int x, int y) {
                 tables[curr_table].user[tables[curr_table].indy][tables[curr_table].indx] = number;
             }
         }
-
         break;
     }
     glutPostRedisplay();
 }
-
-
 
 
 static void on_display(void) {
@@ -372,7 +360,6 @@ static void on_display(void) {
             0.2, 5);
 
 
-
     /* Podesava se tacka pogleda. */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -384,16 +371,13 @@ static void on_display(void) {
     /* velicina kocke */
     double size = 1;
 
-    glRotatef(x_rotation, 1, 0, 0);
-    glRotatef(y_rotation, 0, 1, 0);
-
     glPushMatrix ();
-        /* pomeranje u (0, 0, 0)*/
-        glTranslatef(-size/2.0, -size/2, size/2);
+        glRotatef(x_rotation, 1, 0, 0);
+        glRotatef(y_rotation, 0, 1, 0);
         draw_cube(tables, NUM_TABLES, N, size, curr_table);
     glPopMatrix ();
 
-    /* ako smo u kocki */
+    /* ako smo u kocki TODO opsti brojevi */
     if(zoomInOut >= -1.5 && zoomInOut <= -0.8){
         draw_text("Dude, GET OUT!", 400, 400);
     }

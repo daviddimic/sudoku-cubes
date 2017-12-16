@@ -4,12 +4,12 @@
 #include "sudoku_func.h"
 #include "sudoku_draw.h"
 
-#include <unistd.h>
+#include <unistd.h> /*TODO izbaciti*/
 
 void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
     for (int i = 0; i < n_tables; i++) {
         generate_rand_sudoku(tables[i].original, n_table, 48 - i);
-        sleep(1); //TODO izbaciti!
+        //sleep(1); //TODO izbaciti!
         copy_tables(tables[i].original, tables[i].user, n_table);
         tables[i].indx = 0;
         tables[i].indy = 0;
@@ -19,42 +19,43 @@ void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
 void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size, int curr_table){
     /*FRONT*/
     glPushMatrix();
-        draw_table(tables[FRONT].user, tables[FRONT].indx, tables[FRONT].indy, curr_table == FRONT,  0, 0, size);
+        glTranslatef(0, 0, size/2);
+        draw_table(tables[FRONT].user, tables[FRONT].indx, tables[FRONT].indy, curr_table == FRONT, -size/2, -size/2, size);
     glPopMatrix();
 
     /*BACK*/
     glPushMatrix();
-        glTranslatef(size, 0, -size);
+        glTranslatef(size, 0, -size/2);
         glRotatef(180, 0, 1, 0);
-        draw_table(tables[BACK].user, tables[BACK].indx, tables[BACK].indy, curr_table == BACK, 0, 0, size);
+        draw_table(tables[BACK].user, tables[BACK].indx, tables[BACK].indy, curr_table == BACK, size/2, -size/2, size);
     glPopMatrix();
 
     /*RIGHT*/
     glPushMatrix();
-        glTranslatef(size, 0, 0);
+        glTranslatef(size/2, 0, 0);
         glRotatef(90, 0, 1, 0);
-        draw_table(tables[RIGHT].user, tables[RIGHT].indx, tables[RIGHT].indy, curr_table == RIGHT, 0, 0, size);
+        draw_table(tables[RIGHT].user, tables[RIGHT].indx, tables[RIGHT].indy, curr_table == RIGHT, -size/2, -size/2, size);
     glPopMatrix();
 
     /*LEFT*/
     glPushMatrix();
-        glTranslatef(0, 0, -size);
+        glTranslatef(-size/2, 0, 0);
         glRotatef(-90, 0, 1, 0);
-        draw_table(tables[LEFT].user, tables[LEFT].indx, tables[LEFT].indy, curr_table == LEFT, 0, 0, size);
+        draw_table(tables[LEFT].user, tables[LEFT].indx, tables[LEFT].indy, curr_table == LEFT, -size/2, -size/2, size);
     glPopMatrix();
 
     /*DOWN*/
     glPushMatrix();
-        glTranslatef(0, 0, -size);
+        glTranslatef(0, -size/2, 0);
         glRotatef(90, 1, 0, 0);
-        draw_table(tables[DOWN].user, tables[DOWN].indx, tables[DOWN].indy, curr_table == DOWN, 0, 0, size);
+        draw_table(tables[DOWN].user, tables[DOWN].indx, tables[DOWN].indy, curr_table == DOWN, -size/2, -size/2, size);
     glPopMatrix();
 
     /*UP*/
     glPushMatrix();
-        glTranslatef(0, size, 0);
+        glTranslatef(0, size/2, 0);
         glRotatef(-90, 1, 0, 0);
-        draw_table(tables[UP].user, tables[UP].indx, tables[UP].indy, curr_table == UP, 0, 0, size);
+        draw_table(tables[UP].user, tables[UP].indx, tables[UP].indy, curr_table == UP, -size/2, -size/2, size);
     glPopMatrix();
 }
 
