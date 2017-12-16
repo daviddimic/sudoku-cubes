@@ -29,6 +29,9 @@ typedef struct {
 /* ucitava se sudoku kocka - niz tabli */
 void init_tables(T tables[NUM_TABLES], int n_tables, int n_table);
 
+/* vraca sledecu poziciju table u zavisnosti od tastera w-s-a-d */
+enum position next_table(unsigned char key, enum position curr_table);
+
 /* crta sudoku kocku u (0,0,0) */
 void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size, int curr_table);
 

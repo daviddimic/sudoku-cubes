@@ -9,12 +9,66 @@
 void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
     for (int i = 0; i < n_tables; i++) {
         generate_rand_sudoku(tables[i].original, n_table, 48 - i);
-        //sleep(1); //TODO izbaciti!
+        //sleep(1); //FIXME izbaciti!
         copy_tables(tables[i].original, tables[i].user, n_table);
         tables[i].indx = 0;
         tables[i].indy = 0;
     }
 }
+
+enum position next_table(unsigned char key, enum position curr_table){
+
+    switch (curr_table) {
+        case FRONT:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return LEFT;
+                case 'd': return RIGHT;
+            }
+
+        case RIGHT:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return FRONT;
+                case 'd': return BACK;
+            }
+
+        case LEFT:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return BACK;
+                case 'd': return FRONT;
+            }
+
+        case UP:
+            switch (key) {
+                case 'w': return BACK;
+                case 's': return FRONT;
+                case 'a':
+                case 'd': return UP;
+            }
+
+        case DOWN:
+            switch (key) {
+                case 'w': return FRONT;
+                case 's': return BACK;
+                case 'a':
+                case 'd': return DOWN;
+            }
+        case BACK:
+            switch (key) {
+                case 'w': return UP;
+                case 's': return DOWN;
+                case 'a': return RIGHT;
+                case 'd': return LEFT;
+            }
+        default: return FRONT;
+    }
+}
+
 
 void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size, int curr_table){
     /*FRONT*/

@@ -43,61 +43,6 @@ static void on_timer3(int value);
 static void on_timer4(int value);
 
 
-static enum position next_table(unsigned char key, enum position curr_table){
-
-    switch (curr_table) {
-        case FRONT:
-            switch (key) {
-                case 'w': return UP;
-                case 's': return DOWN;
-                case 'a': return LEFT;
-                case 'd': return RIGHT;
-            }
-
-        case RIGHT:
-            switch (key) {
-                case 'w': return UP;
-                case 's': return DOWN;
-                case 'a': return FRONT;
-                case 'd': return BACK;
-            }
-
-        case LEFT:
-            switch (key) {
-                case 'w': return UP;
-                case 's': return DOWN;
-                case 'a': return BACK;
-                case 'd': return FRONT;
-            }
-
-        case UP:
-            switch (key) {
-                case 'w': return BACK;
-                case 's': return FRONT;
-                case 'a':
-                case 'd': return UP;
-            }
-
-        case DOWN:
-            switch (key) {
-                case 'w': return FRONT;
-                case 's': return BACK;
-                case 'a':
-                case 'd': return DOWN;
-            }
-        case BACK:
-            switch (key) {
-                case 'w': return UP;
-                case 's': return DOWN;
-                case 'a': return RIGHT;
-                case 'd': return LEFT;
-            }
-        default: return FRONT;
-    }
-}
-
-
-
 int main(int argc, char** argv) {
 
     glutInit(&argc, argv);
@@ -264,7 +209,8 @@ static void on_keyboard(unsigned char key, int x, int y) {
         /* resi sudoku, moze se primeniti help_number broj puta */
         case 'r':
         if(help_number > 0){
-            int a, b; /*ne sluze nicemu, mora da se prosledi funkciji*/
+            int a, b; /*NOTE: ne sluze nicemu, mora da se prosledi funkciji*/
+
             /* ako je tabla popunjena onda je sudoku vec resen */
             if(is_table_empty(tables[curr_table].original, N, &a, &b)){
                 /* resavamo sudoku i umanjujemo broj pomoci */
@@ -314,7 +260,6 @@ static void on_keyboard(unsigned char key, int x, int y) {
             timer_active = 1;
         }
         break;
-
 
         /* pomeranje kamere, zoomIn, zoomOut */
         case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
