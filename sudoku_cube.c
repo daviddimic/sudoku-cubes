@@ -7,9 +7,9 @@
 #include "sudoku_draw.h"
 
 /* boja cifara originalne postavke */
-#define O_R 0.2
-#define O_G 0.2
-#define O_B 0.3
+#define O_R .3
+#define O_G .05
+#define O_B .3
 
 /* boja cifara koje korisnik unosi */
 #define U_R 0.09

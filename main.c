@@ -6,8 +6,6 @@
 #include "sudoku_cube.h"
 #include "sudoku_func.h"
 
-static int window_width, window_height;
-
 /* broj koji se unosi sa tastature */
 static unsigned number;
 
@@ -26,7 +24,7 @@ static float y_rotation, x_rotation;
 static int timer_active;
 
 /* priblizavanje i udaljavanje pogleda na kocku */
-static double zoomInOut = 0;
+static double zoomInOut;
 
 
 /* OpenGL inicijalizacija */
@@ -42,6 +40,7 @@ static void on_timer_a(int value);
 static void on_timer_w(int value);
 static void on_timer_d(int value);
 static void on_timer_s(int value);
+
 
 
 int main(int argc, char** argv) {
@@ -66,8 +65,12 @@ int main(int argc, char** argv) {
 }
 
 static void on_reshape(int width, int height) {
-    window_width = width;
-    window_height = height;
+    glViewport(0, 0, width, height);
+
+    /* Podesava se projekcija. */
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(60, (float)width/height, 0.2, 5);
 }
 
 static void initialize(void) {
@@ -78,11 +81,37 @@ static void initialize(void) {
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_LINE_STIPPLE);
 
+    /* osvetljenje */
+    GLfloat ambient[] = {.2, .2, .2, 1};
+    GLfloat diffuse[] = {.6, .6, .6, 1};
+    GLfloat specular[] = {.9, .9, .9, 1};
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+
+    glEnable(GL_COLOR_MATERIAL);
+
+    GLfloat ambient_coef[] = {.1, .1, .1, 1};
+    GLfloat diffuse_coef[] = {.6, .6, .6, 1};
+    GLfloat specular_coef[] = {.9, .9, .9, 1};
+
+    GLint shininess = 30;
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coef);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coef);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coef);
+    glMateriali(GL_FRONT, GL_SHININESS, shininess);
+
     timer_active = 0;
+
+    zoomInOut = 0;
 
     x_rotation = 0;
     y_rotation = 0;
 
+    /* ucitavamo 6 tabli */
     init_tables(tables, NUM_TABLES, N);
 }
 
@@ -200,7 +229,6 @@ static void on_keyboard(unsigned char key, int x, int y) {
     switch (key) {
         /* izlaz iz programa ESC */
         case 27: exit(0);
-        break;
 
         /* celu tablu vraca na pocetnu */
         case 'q':
@@ -228,7 +256,6 @@ static void on_keyboard(unsigned char key, int x, int y) {
 
         /*  krecemo se kroz razlicite sudoku table
         *  okrecemo kocku na wsad
-        TODO
         */
         case 'd':
         if (!timer_active) {
@@ -268,7 +295,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
         case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
         break;
 
-        /*TODO izbaciti rucno pomeranje*/
+        /*TODO izbaciti rucno pomeranjemakomo*/
         case ' ': curr_table = (curr_table + 1) % NUM_TABLES;
         break;
 
@@ -292,19 +319,11 @@ static void on_keyboard(unsigned char key, int x, int y) {
 
 
 static void on_display(void) {
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glViewport(0, 0, window_width, window_height);
-
-    /* Podesava se projekcija. */
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(
-            60,
-            window_width/(float)window_height,
-            0.2, 5);
-
+    GLfloat light_position[] = {-0.5, 0.5, 4, 0};
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glShadeModel(GL_SMOOTH);
 
     /* Podesava se tacka pogleda. */
     glMatrixMode(GL_MODELVIEW);
@@ -317,6 +336,7 @@ static void on_display(void) {
     /* velicina kocke */
     double size = 1;
 
+    /* crta se kocka */
     glPushMatrix ();
         glRotatef(x_rotation, 1, 0, 0);
         glRotatef(y_rotation, 0, 1, 0);
@@ -328,10 +348,10 @@ static void on_display(void) {
         draw_text("Dude, GET OUT!", 400, 400);
     }
 
+    /* ispis poruke o broju pomoci - resavanje jednog sudoku */
     char help_str[7] = "help: ";
     sprintf(help_str + strlen(help_str), "%d" , help_number);
     draw_text(help_str, 10, 25);
-
 
     glutSwapBuffers();
 }
