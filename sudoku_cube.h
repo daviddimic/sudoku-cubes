@@ -33,7 +33,7 @@ void init_tables(T tables[NUM_TABLES], int n_tables, int n_table);
 enum position next_table(unsigned char key, enum position curr_table);
 
 /* crta sudoku kocku u (0,0,0) */
-void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size, int curr_table);
+void draw_cube(T tables[NUM_TABLES], double size, int curr_table);
 
 /* iscrtava 2D tekst na poziciji (x,y)*/
 void draw_text(const char* text, double x, double y);

@@ -1,13 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <string.h>
 #include <GL/glut.h>
 #include "sudoku_draw.h"
 #include "sudoku_cube.h"
 #include "sudoku_func.h"
 
-/* broj koji se unosi sa tastature */
-static unsigned number;
+/* makro koji prverava da li je X izmedju A i B*/
+#define IN(X, A, B) (((X) >= (A)) && ((X) <= (B)))
+
+#define EPS 0.2
+
+/* gravitaciona konstanta */
+#define G 9.81
+#define pi 3.141592654
+
+/*TODO rand menjati*/
+static const float v0 = 6;
+
 
 /* tekuca tabla koja se resava */
 static int curr_table = FRONT;
@@ -21,11 +32,18 @@ static int help_number = 2;
 /* uglovi rotacije kocke */
 static float y_rotation, x_rotation;
 
-static int timer_active;
+static int timer_active, timer_active_fly;
+
+static float camera_x, camera_y, camera_z;
+
+/* vreme animacije */
+static float t;
+
+/* parametri kretanja */
+static float x_t, y_t;
 
 /* priblizavanje i udaljavanje pogleda na kocku */
 static double zoomInOut;
-
 
 /* OpenGL inicijalizacija */
 static void initialize(void);
@@ -44,7 +62,6 @@ static void on_timer_s(int value);
 
 
 int main(int argc, char** argv) {
-
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
@@ -66,11 +83,10 @@ int main(int argc, char** argv) {
 
 static void on_reshape(int width, int height) {
     glViewport(0, 0, width, height);
-
     /* Podesava se projekcija. */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (float)width/height, 0.2, 5);
+    gluPerspective(60, (float)width/height, 0.2, 50);
 }
 
 static void initialize(void) {
@@ -105,8 +121,17 @@ static void initialize(void) {
     glMateriali(GL_FRONT, GL_SHININESS, shininess);
 
     timer_active = 0;
+    timer_active_fly = 0;
+
+    t = 0;
+    x_t = 0;
+    y_t = 0;
 
     zoomInOut = 0;
+
+    camera_x = 1;
+    camera_y = 0.8;
+    camera_z = 1.5;
 
     x_rotation = 0;
     y_rotation = 0;
@@ -224,7 +249,31 @@ static void on_timer_a(int value)
         glutTimerFunc(50, on_timer_a, 0);
 }
 
+
+/*TODO*/
+static void on_timer_fly(int value){
+    if(value != 1)
+        return;
+
+    t += 0.01;
+    x_t = v0*t*t;
+    y_t = -t*t/(v0-2);
+
+    /*da upadne u kocku*/
+    printf("%f %f\n",x_t - 7 - camera_x, y_t + 1 - camera_y);
+    if(IN(x_t - 7 - camera_x, -EPS, EPS) && IN(y_t + 1 - camera_y, -EPS, EPS)){
+        timer_active_fly = 0;
+    }
+
+    glutPostRedisplay();
+
+    if(timer_active_fly)
+        glutTimerFunc(20, on_timer_fly, 1);
+}
+
 static void on_keyboard(unsigned char key, int x, int y) {
+    /*broj koji se unosi sa tastature*/
+    unsigned number;
 
     switch (key) {
         /* izlaz iz programa ESC */
@@ -295,8 +344,12 @@ static void on_keyboard(unsigned char key, int x, int y) {
         case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
         break;
 
-        /*TODO izbaciti rucno pomeranjemakomo*/
-        case ' ': curr_table = (curr_table + 1) % NUM_TABLES;
+
+        case ' ':
+        if (!timer_active_fly) {
+            glutTimerFunc(20, on_timer_fly, 1);
+            timer_active_fly = 1;
+        }
         break;
 
         /* unos brojeva u tekucu tablu */
@@ -329,18 +382,29 @@ static void on_display(void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
-            1 + zoomInOut, 0.8 + zoomInOut, 1.5 + zoomInOut,
+            camera_x + zoomInOut, camera_y + zoomInOut, camera_z,
             0, 0, 0,
             0, 1, 0);
 
     /* velicina kocke */
     double size = 1;
 
+
+/*
+    x_t = v0*t*cos(angle);
+    y_t = v0*t*sin(angle) - G*t*t/2;
+*/
+
     /* crta se kocka */
     glPushMatrix ();
+        //glTranslatef(-5, 1 ,-5);
+
         glRotatef(x_rotation, 1, 0, 0);
         glRotatef(y_rotation, 0, 1, 0);
-        draw_cube(tables, NUM_TABLES, N, size, curr_table);
+
+        //glRotatef(-45, 0, 1, 0);
+        //glTranslatef(x_t, y_t, 0);
+        draw_cube(tables, size, curr_table);
     glPopMatrix ();
 
     /* ako smo u kocki TODO opsti brojevi */
@@ -349,9 +413,11 @@ static void on_display(void) {
     }
 
     /* ispis poruke o broju pomoci - resavanje jednog sudoku */
+    glDisable(GL_LIGHTING);
     char help_str[7] = "help: ";
     sprintf(help_str + strlen(help_str), "%d" , help_number);
     draw_text(help_str, 10, 25);
+    glEnable(GL_LIGHTING);
 
     glutSwapBuffers();
 }

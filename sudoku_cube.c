@@ -80,7 +80,7 @@ enum position next_table(unsigned char key, enum position curr_table){
 }
 
 
-void draw_cube(T tables[NUM_TABLES], int n_tables, int n_table, double size, int curr_table){
+void draw_cube(T tables[NUM_TABLES], double size, int curr_table){
     /*FRONT*/
     glPushMatrix();
         glTranslatef(0, 0, size/2);

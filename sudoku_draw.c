@@ -1,6 +1,20 @@
 #include <GL/glut.h>
 #include "sudoku_draw.h"
 
+/* boja pozadine sudoku table */
+#define TABLE_BACKGROUND_R 0.85
+#define TABLE_BACKGROUND_G 0.85
+#define TABLE_BACKGROUND_B 0.90
+
+/* boja granicnih linija table */
+#define TABLE_BORDER_LINES_R 0
+#define TABLE_BORDER_LINES_G 0
+#define TABLE_BORDER_LINES_B 0
+
+/* okvir tekucek polja */
+#define CELL_BORDER_R 1
+#define CELL_BORDER_G 0
+#define CELL_BORDER_B 0
 
 void draw_table(const int table[][N], int indx, int indy, int border, double x, double y, double width, double r, double g, double b){
     draw_numbers(table, indx, indy, border, x, y, width, r, g, b);
@@ -9,10 +23,10 @@ void draw_table(const int table[][N], int indx, int indy, int border, double x, 
 
 
 void draw_grid(double x, double y, double width){
-
     /*okvir table*/
-    glColor3f(0, 0, 0);
+    glColor3f(TABLE_BORDER_LINES_R, TABLE_BORDER_LINES_G, TABLE_BORDER_LINES_B);
     glLineWidth(4);
+
     glBegin(GL_LINE_LOOP);
         glVertex2f(x + 0, y + 0);
         glVertex2f(x + width, y + 0);
@@ -28,23 +42,20 @@ void draw_grid(double x, double y, double width){
         glLineWidth(2);
         /*podebljana linija na svako trece*/
         if(i%3 == 0){
-           glLineWidth(4);
-       }
-        glBegin(GL_LINES);
-            glColor3f(0, 0, 0);
-            glVertex2f(x + i*width_cell, y + 0);
-            glVertex2f(x + i*width_cell, y + width);
-        glEnd();
+            glLineWidth(4);
+        }
 
         glBegin(GL_LINES);
-            glColor3f(0, 0, 0);
+            glVertex2f(x + i*width_cell, y + 0);
+            glVertex2f(x + i*width_cell, y + width);
+
             glVertex2f(x + 0, y + i*height_cell);
             glVertex2f(x + width, y + i*height_cell);
         glEnd();
     }
 
     /*pozadnina table*/
-    glColor3f(0.85, 0.85, 0.85);
+    glColor3f(TABLE_BACKGROUND_R, TABLE_BACKGROUND_G, TABLE_BACKGROUND_B);
     glBegin(GL_QUADS);
         glVertex2f(x + 0, y + 0);
         glVertex2f(x + width, y + 0);
@@ -55,11 +66,10 @@ void draw_grid(double x, double y, double width){
 
 
 /*crta crveni okvir tekuce pozicije na tabli*/
-static void draw_border(double x, double y, double size){
-
+static void draw_cell_border(double x, double y, double size){
     glLineWidth(5);
     glBegin(GL_LINE_LOOP);
-        glColor3f(1, 0, 0);
+        glColor3f(CELL_BORDER_R, CELL_BORDER_G, CELL_BORDER_B);
         glVertex2f(x , -y);
         glVertex2f(x + size, -y);
         glVertex2f(x + size, -y - size);
@@ -89,7 +99,7 @@ void draw_numbers(const int table[][N], int indx, int indy, int border, double x
 
             /* crvenim se boji okvir u oznacenom polju*/
             if(border && i == indy && j == indx){
-                draw_border(x_curr - spaceX, -y_curr - height_cell + spaceY, width_cell);
+                draw_cell_border(x_curr - spaceX, -y_curr - height_cell + spaceY, width_cell);
             }
 
             /* nule ne iscrtavamo*/
@@ -120,16 +130,14 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + 2*size);
             glVertex2f(x + 0, y + 2*size);
             glVertex2f(x + 0, y + size);
-        glEnd();
-             break;
+        break;
 
         case 1:
         glBegin(GL_LINE_STRIP);
             glVertex2f(x + size, y + 0);
             glVertex2f(x + size, y + size);
             glVertex2f(x + size, y + 2*size);
-        glEnd();
-             break;
+        break;
 
         case 2:
         glBegin(GL_LINE_STRIP);
@@ -139,8 +147,7 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + size);
             glVertex2f(x + size, y + 2*size);
             glVertex2f(x + 0, y + 2*size);
-        glEnd();
-            break;
+        break;
 
         case 3:
         glBegin(GL_LINE_STRIP);
@@ -151,7 +158,6 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + size);
             glVertex2f(x + size, y + 2*size);
             glVertex2f(x + 0, y + 2*size);
-        glEnd();
             break;
 
         case 4:
@@ -162,8 +168,7 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + size);
             glVertex2f(x + 0, y + size);
             glVertex2f(x + 0, y + 2*size);
-        glEnd();
-            break;
+        break;
 
         case 5:
         glBegin(GL_LINE_STRIP);
@@ -173,8 +178,7 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + 0, y + size);
             glVertex2f(x + 0, y + 2*size);
             glVertex2f(x + size, y + 2*size);
-        glEnd();
-            break;
+        break;
 
         case 6:
         glBegin(GL_LINE_STRIP);
@@ -185,8 +189,7 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + 0);
             glVertex2f(x + size, y + size);
             glVertex2f(x + 0, y + size);
-        glEnd();
-            break;
+        break;
 
         case 7:
         glBegin(GL_LINE_STRIP);
@@ -194,8 +197,7 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + size);
             glVertex2f(x + size, y + 2*size);
             glVertex2f(x + 0, y + 2*size);
-        glEnd();
-            break;
+        break;
 
         case 8:
         glBegin(GL_LINE_LOOP);
@@ -207,8 +209,7 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + 2*size);
             glVertex2f(x + 0, y + 2*size);
             glVertex2f(x + 0, y + size);
-        glEnd();
-            break;
+        break;
 
         case 9:
         glBegin(GL_LINE_STRIP);
@@ -220,7 +221,7 @@ void draw_digit(const int number, double x, double y, double size){
             glVertex2f(x + size, y + 2*size);
             glVertex2f(x + 0, y + 2*size);
             glVertex2f(x + 0, y + size);
-        glEnd();
-            break;
+        break;
     }
+    glEnd();
 }
