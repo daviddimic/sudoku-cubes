@@ -18,11 +18,11 @@ enum position {
  *  kao i poziciju na tabli gde se upisuje broj
 */
 typedef struct {
-    /*korisnicka tabla*/
+    /* korisnicka tabla*/
     int user[N][N];
-    /*originalna postavka table*/
+    /* originalna postavka table*/
     int original[N][N];
-    /*indeks pozicije na tekucoj tabli*/
+    /* indeks pozicije na tekucoj tabli*/
     int indx, indy;
 } T;
 
