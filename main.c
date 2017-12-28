@@ -149,16 +149,20 @@ static void on_specialkeys(int key, int x, int y){
     /* sa strelicama krece se kroz tekucu sudoku tablu */
     switch (key) {
     case GLUT_KEY_UP:
-        tables[curr_table].indy = (tables[curr_table].indy >= N || tables[curr_table].indy <= 0) ? 0 : tables[curr_table].indy-1;
+        tables[curr_table].indy =
+            tables[curr_table].indy <= 0 ? 0 : tables[curr_table].indy - 1;
         break;
     case GLUT_KEY_DOWN:
-        tables[curr_table].indy = (tables[curr_table].indy >= N-1) ? N-1 : tables[curr_table].indy+1;
+        tables[curr_table].indy =
+            tables[curr_table].indy >= N-1 ? N-1 : tables[curr_table].indy + 1;
         break;
     case GLUT_KEY_LEFT:
-        tables[curr_table].indx = (tables[curr_table].indx <= 0) ? 0 : tables[curr_table].indx-1;
+        tables[curr_table].indx =
+            tables[curr_table].indx <= 0 ? 0 : tables[curr_table].indx - 1;
         break;
     case GLUT_KEY_RIGHT:
-        tables[curr_table].indx = (tables[curr_table].indx >= N-1) ? N-1 : tables[curr_table].indx+1;
+        tables[curr_table].indx =
+            tables[curr_table].indx >= N-1 ? N-1 : tables[curr_table].indx + 1;
         break;
     }
     glutPostRedisplay();
