@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <assert.h>
 #include <GL/glut.h>
+
 #include "sudoku_draw.h"
 #include "sudoku_cube.h"
 #include "sudoku_func.h"
@@ -196,13 +198,14 @@ static void set_rotation_and_timer(float *rotation, int *timer){
         *timer = 0;
         *rotation = 0;
     }
-
 }
 
 
 static void on_timer_wsad(int value) {
 
     if(value != TIMER_ROTATE_ID) return;
+
+    assert(wsad_key == 'w' || wsad_key == 's' || wsad_key == 'a' || wsad_key == 'd');
 
     switch (wsad_key) {
         case 'w':
@@ -290,13 +293,14 @@ static void on_keyboard(unsigned char key, int x, int y) {
             }
         break;
 
-        /*  krecemo se kroz razlicite sudoku table
+        /* krecemo se kroz razlicite sudoku table
         *  okrecemo kocku na wsad */
         case 'w':
         case 's':
         case 'a':
         case 'd':
-            if (!timer_rotate_active) {
+            /* ne moze se okretati kocka ako se krece */
+            if (!timer_active_fly && !timer_rotate_active) {
                 wsad_key = key;
                 curr_table = next_table(key, curr_table);
                 glutTimerFunc(TIMER_ROTATE_WAIT, on_timer_wsad, TIMER_ROTATE_ID);
@@ -357,18 +361,19 @@ static void on_display(void) {
 
 
     /* kretanje kocke ka posmatracu */
-    glTranslatef(-5, 1 ,-5);
+/*
+    glTranslatef(-5, 1, -5);
     glRotatef(-45, 0, 1, 0);
     glTranslatef(x_t, y_t, 0);
     glRotatef(60, 0, 1, 0);
-
-    glPushMatrix ();
+*/
+    glPushMatrix();
         /* rotacija kocke preko wsad */
         glRotatef(x_rotation, 1, 0, 0);
         glRotatef(y_rotation, 0, 1, 0);
         /* crta se kocka */
         draw_cube(tables, size, curr_table);
-    glPopMatrix ();
+    glPopMatrix();
 
 
     /* ispis poruke o broju pomoci - resavanje jednog sudoku */

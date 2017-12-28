@@ -1,4 +1,5 @@
 #include <GL/glut.h>
+#include <assert.h>
 #include "sudoku_draw.h"
 
 /* boja pozadine sudoku table */
@@ -117,11 +118,13 @@ void draw_numbers(const int table[][N], int indx, int indy, int border, double x
 }
 
 
-void draw_digit(const int number, double x, double y, double size){
+void draw_digit(const int digit, double x, double y, double size){
+
+    assert(digit >=0 && digit <= 9);
 
     glLineWidth(150*size);
 
-    switch(number) {
+    switch(digit) {
         case 0:
         glBegin(GL_LINE_LOOP);
             glVertex2f(x + 0, y + 0);

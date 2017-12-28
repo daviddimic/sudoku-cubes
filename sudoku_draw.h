@@ -4,7 +4,7 @@
 #define N 9
 
 /* Iscrtava se cifra od 0 do 9 sa datim koordinatama i velicinom*/
-void draw_digit(const int number, double x, double y, double size);
+void draw_digit(const int digit, double x, double y, double size);
 
 /* Iscrtava se tabla (mreza) za igru sa donjim desnim uglom u x, y i sirinom width*/
 void draw_grid(double x, double y, double width);

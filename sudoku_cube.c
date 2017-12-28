@@ -1,6 +1,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <GL/glut.h>
 #include "sudoku_cube.h"
 #include "sudoku_func.h"
@@ -27,6 +28,8 @@ void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
 }
 
 enum position next_table(unsigned char key, enum position curr_table){
+
+    assert(key == 'w' || key == 's' || key == 'a' || key == 'd');
 
     switch (curr_table) {
         case FRONT:
