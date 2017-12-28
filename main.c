@@ -200,22 +200,34 @@ static void set_rotation_and_timer(float *rotation, int *timer){
     }
 }
 
-
+/* tajmer za okretanje kocke */
 static void on_timer_wsad(int value) {
 
     if(value != TIMER_ROTATE_ID) return;
 
-    assert(wsad_key == 'w' || wsad_key == 's' || wsad_key == 'a' || wsad_key == 'd');
+    assert( wsad_key == 'w' ||
+            wsad_key == 's' ||
+            wsad_key == 'a' ||
+            wsad_key == 'd');
 
     switch (wsad_key) {
         case 'w':
-            /* TODO ne moze se ici dalje ako smo na gornjoj tabli */
-            x_rotation += 10;
+            /* ne moze se ici napred ako smo na gornjoj tabli */
+            if(curr_table == BACK)
+                curr_table = UP;
+            else
+                x_rotation += 10;
+
             set_rotation_and_timer(&x_rotation, &timer_rotate_active);
         break;
 
         case 's':
-            x_rotation -= 10;
+            /* ne moze se ici dole ako smo na donjoj tabli */
+            if(curr_table == BACK)
+                curr_table = DOWN;
+            else
+                x_rotation -= 10;
+
             set_rotation_and_timer(&x_rotation, &timer_rotate_active);
         break;
 
@@ -238,8 +250,8 @@ static void on_timer_wsad(int value) {
 }
 
 
-/* TODO */
-static void on_timer_fly(int value) {
+/* TODO izmeniti tajmer za kretanje kocke */
+static void on_timer_move(int value) {
 
     if(value != 1) return;
 
@@ -249,15 +261,14 @@ static void on_timer_fly(int value) {
     y_t = -t*t/(v0-2);
 
     /*da upadne u kocku*/
-    //printf("%f %f\n",x_t - 7 - camera_x, y_t + 1 - camera_y);
-    if(IN(x_t - 7 - camera_x, -EPS, EPS) && IN(y_t + 1 - camera_y, -EPS, EPS)){
+    if(IN(x_t - 7 - camera_x, -EPS, EPS) && IN(y_t + 1 - camera_y, - EPS, EPS)){
         timer_active_fly = 0;
     }
 
     glutPostRedisplay();
 
     if(timer_active_fly){
-        glutTimerFunc(TIMER_ROTATE_WAIT, on_timer_fly, 1);
+        glutTimerFunc(TIMER_ROTATE_WAIT, on_timer_move, 1);
     }
 }
 
@@ -315,7 +326,7 @@ static void on_keyboard(unsigned char key, int x, int y) {
         /* TODO pokretanje kretanaj kocke */
         case ' ':
             if (!timer_active_fly) {
-                glutTimerFunc(20, on_timer_fly, 1);
+                glutTimerFunc(20, on_timer_move, 1);
                 timer_active_fly = 1;
             }
         break;
@@ -329,7 +340,8 @@ static void on_keyboard(unsigned char key, int x, int y) {
         /* ne moze se promeniti polje iz originalne postavke */
         if(!tables[curr_table].original[tables[curr_table].indy][tables[curr_table].indx]){
             /* ne moze se upisati broj osim nule ako dodje do konflikta brojeva */
-            if(!(number && is_conflict(tables[curr_table].user, N, number, tables[curr_table].indy, tables[curr_table].indx))){
+            if(!(number &&
+                is_conflict(tables[curr_table].user, N, number, tables[curr_table].indy, tables[curr_table].indx))){
                 tables[curr_table].user[tables[curr_table].indy][tables[curr_table].indx] = number;
             }
         }
@@ -359,8 +371,7 @@ static void on_display(void) {
     /* velicina kocke */
     double size = 1;
 
-
-    /* kretanje kocke ka posmatracu */
+    /* TODO kretanje kocke ka posmatracu i izbegavanje */
 /*
     glTranslatef(-5, 1, -5);
     glRotatef(-45, 0, 1, 0);
