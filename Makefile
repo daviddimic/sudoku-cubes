@@ -19,11 +19,7 @@ main.o: main.c
 sudoku_cube.o: sudoku_cube.c
 	$(CC) -std=c99 -Wall -c sudoku_cube.c
 
-.PHONY: beauty clean dist
-
-beauty:
-	-indent -nut -kr main.c
-	-rm *~ *BAK
+.PHONY: clean dist
 
 clean:
 	-rm *.o $(PROGRAM) *core
