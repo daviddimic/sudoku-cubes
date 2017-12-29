@@ -9,7 +9,7 @@
 
 T tables[NUM_TABLES];
 int curr_table;
-int help_number;
+int help_number = 2;
 double zoomInOut;
 unsigned char wsad_key;
 
@@ -87,11 +87,11 @@ void on_keyboard(unsigned char key, int x, int y) {
         case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1; break;
         case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;  break;
 
-        /* TODO pokretanje kretanaj kocke
+        /* TODO pokretanje kretanaja kocke
         case ' ':
-            if (!timer_active_fly) {
-                glutTimerFunc(20, on_timer_move, 1);
-                timer_active_fly = 1;
+            if (!timer_move_active) {
+                glutTimerFunc(TIMER_MOVE_WAIT, on_timer_move, TIMER_MOVE_ID);
+                timer_move_active = 1;
             }
         break;
         */

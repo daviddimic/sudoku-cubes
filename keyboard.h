@@ -1,5 +1,5 @@
 #ifndef KEYBOARD_H_
-#define  KEYBOARD_H_
+#define KEYBOARD_H_
 
 /* sa strelicama se krece kroz tekucu sudoku tablu */
 void on_specialkeys(int key, int x, int y);
