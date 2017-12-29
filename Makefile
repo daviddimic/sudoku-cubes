@@ -4,8 +4,8 @@ CFLAGS  = -g -ansi -Wall -I/usr/X11R6/include -I/usr/pkg/include
 LDFLAGS = -L/usr/X11R6/lib -L/usr/pkg/lib
 LDLIBS  = -lglut -lGLU -lGL -lm
 
-$(PROGRAM): main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o
-	$(CC) $(LDFLAGS) -o $(PROGRAM) main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o $(LDLIBS)
+$(PROGRAM): main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o timers.o
+	$(CC) $(LDFLAGS) -o $(PROGRAM) main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o timers.o $(LDLIBS)
 
 sudoku_draw.o: sudoku_draw.c
 	$(CC) -std=c99 -Wall -c sudoku_draw.c
@@ -15,6 +15,9 @@ sudoku_func.o: sudoku_func.c
 
 keyboard.o: keyboard.c
 	$(CC) -std=c99 -Wall -c keyboard.c
+
+timers.o: timers.c
+	$(CC) -std=c99 -Wall -c timers.c
 
 main.o: main.c
 	$(CC) -std=c99 -Wall -c main.c
