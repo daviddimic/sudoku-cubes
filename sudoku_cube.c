@@ -136,7 +136,7 @@ void draw_cube(T tables[NUM_TABLES], double size, int curr_table){
 void draw_text(const char* text, double x, double y){
     glDisable(GL_LIGHTING);
 
-    glColor3f(1, 0, 0);
+    glColor3f(0.0, 0.8, 0.0);
     glMatrixMode(GL_PROJECTION);
     double matrix[16];
     glGetDoublev(GL_PROJECTION_MATRIX, matrix);
