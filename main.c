@@ -193,11 +193,11 @@ static void on_display(void) {
 
 
     /* ispis poruke o broju pomoci - resavanje jednog sudoku */
-    glDisable(GL_LIGHTING);
+    
     char help_str[7] = "help: ";
     sprintf(help_str + strlen(help_str), "%d" , help_number);
     draw_text(help_str, 10, 25);
-    glEnable(GL_LIGHTING);
+
 
     glutSwapBuffers();
 }
