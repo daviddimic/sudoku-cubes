@@ -11,7 +11,7 @@
 /*dimenzija sudoku table*/
 #define N 9
 
-
+/* ispis greske i izlaz iz programa */
 void error(const char* msg);
 
 /*kopira sadrzaj table src u dest*/

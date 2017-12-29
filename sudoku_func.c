@@ -241,6 +241,7 @@ void generate_rand_sudoku(int table[][N], const int n, const int num_empty){
 	0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+
 	sudoku_generate(pom_table);
 	sudoku_classic(pom_table, num_empty);
 
