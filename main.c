@@ -1,16 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include <string.h>
-#include <assert.h>
 #include <GL/glut.h>
 
-#include "sudoku_draw.h"
 #include "sudoku_cube.h"
-#include "sudoku_func.h"
+#include "keyboard.h"
 
-#define TIMER_ROTATE_WAIT 50
-#define TIMER_ROTATE_ID 0
 
 /* makro koji prverava da li je X izmedju A i B*/
 #define IN(X, A, B) (((X) >= (A)) && ((X) <= (B)))
@@ -26,25 +20,23 @@ static const float v0 = 6;
 
 
 /* tekuca tabla koja se resava */
-static int curr_table = FRONT;
+extern int curr_table;
 /* niz tabli */
-static T tables[NUM_TABLES];
+extern T tables[NUM_TABLES];
 
 /* broj pomoci za resavanje sudoku */
-static int help_number = 2;
+extern int help_number;
 
-/* za rotiranje kocke */
-static unsigned char wsad_key;
 /* uglovi rotacije kocke */
-static float y_rotation, x_rotation;
+extern float y_rotation, x_rotation;
 
 /* tajmeri animacije */
-static int timer_rotate_active, timer_active_fly;
+static int timer_active_fly;
 
 /* koordinate kamere */
 static float camera_x, camera_y, camera_z;
 /* priblizavanje i udaljavanje pogleda na kocku */
-static double zoomInOut;
+extern double zoomInOut;
 
 /* vreme animacije */
 static float t;
@@ -52,18 +44,12 @@ static float t;
 static float x_t, y_t;
 
 
-
 /* OpenGL inicijalizacija */
 static void initialize(void);
 
 /* deklaracije callback funkcija */
-static void on_keyboard(unsigned char key, int x, int y);
-static void on_specialkeys(int key, int x, int y);
 static void on_reshape(int width, int height);
 static void on_display(void);
-
-/* tajmer za okretanje kocke */
-static void on_timer_wsad(int value);
 
 
 int main(int argc, char** argv) {
@@ -125,7 +111,6 @@ static void initialize(void) {
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coef);
     glMateriali(GL_FRONT, GL_SHININESS, shininess);
 
-    timer_rotate_active = 0;
     timer_active_fly = 0;
 
     t = 0;
@@ -143,118 +128,12 @@ static void initialize(void) {
 
     /* ucitavamo 6 tabli */
     init_tables(tables, NUM_TABLES, N);
-}
-
-static void on_specialkeys(int key, int x, int y){
-    /* sa strelicama krece se kroz tekucu sudoku tablu */
-    switch (key) {
-    case GLUT_KEY_UP:
-        tables[curr_table].indy =
-            tables[curr_table].indy <= 0 ? 0 : tables[curr_table].indy - 1;
-        break;
-    case GLUT_KEY_DOWN:
-        tables[curr_table].indy =
-            tables[curr_table].indy >= N-1 ? N-1 : tables[curr_table].indy + 1;
-        break;
-    case GLUT_KEY_LEFT:
-        tables[curr_table].indx =
-            tables[curr_table].indx <= 0 ? 0 : tables[curr_table].indx - 1;
-        break;
-    case GLUT_KEY_RIGHT:
-        tables[curr_table].indx =
-            tables[curr_table].indx >= N-1 ? N-1 : tables[curr_table].indx + 1;
-        break;
-    }
-    glutPostRedisplay();
-}
-
-/* za koliko treba rotirati kocku i kada zaustaviti tajmer */
-static void set_rotation_and_timer(float *rotation, int *timer){
-    float eps = 0.01;
-
-    if(*rotation >= -eps && *rotation <= eps)
-        *timer = 0;
-
-    if(*rotation + 90 >= -eps && *rotation + 90 <= eps)
-        *timer = 0;
-
-    if(*rotation + 180 >= -eps && *rotation + 180 <= eps)
-        *timer = 0;
-
-    if(*rotation + 270 >= -eps && *rotation + 270 <= eps)
-        *timer = 0;
-
-    if(*rotation + 360 >= -eps && *rotation + 360 <= eps){
-        *timer = 0;
-        *rotation = 0;
-    }
-
-    if(*rotation - 90 >= -eps && *rotation - 90 <= eps)
-        *timer = 0;
-
-    if(*rotation - 180 >= -eps && *rotation - 180 <= eps)
-        *timer = 0;
-
-    if(*rotation - 270 >= -eps && *rotation - 270 <= eps)
-        *timer = 0;
-
-    if(*rotation - 360 >= -eps && *rotation - 360 <= eps){
-        *timer = 0;
-        *rotation = 0;
-    }
-}
-
-/* tajmer za okretanje kocke */
-static void on_timer_wsad(int value) {
-
-    if(value != TIMER_ROTATE_ID) return;
-
-    assert( wsad_key == 'w' ||
-            wsad_key == 's' ||
-            wsad_key == 'a' ||
-            wsad_key == 'd');
-
-    switch (wsad_key) {
-        case 'w':
-            /* ne moze se ici napred ako smo na gornjoj tabli */
-            if(curr_table == BACK)
-                curr_table = UP;
-            else
-                x_rotation += 10;
-
-            set_rotation_and_timer(&x_rotation, &timer_rotate_active);
-        break;
-
-        case 's':
-            /* ne moze se ici dole ako smo na donjoj tabli */
-            if(curr_table == BACK)
-                curr_table = DOWN;
-            else
-                x_rotation -= 10;
-
-            set_rotation_and_timer(&x_rotation, &timer_rotate_active);
-        break;
-
-        case 'a':
-            y_rotation += 10;
-            set_rotation_and_timer(&y_rotation, &timer_rotate_active);
-        break;
-
-        case 'd':
-            y_rotation -= 10;
-            set_rotation_and_timer(&y_rotation, &timer_rotate_active);
-        break;
-    }
-
-    glutPostRedisplay();
-
-    if(timer_rotate_active){
-        glutTimerFunc(TIMER_ROTATE_WAIT, on_timer_wsad, TIMER_ROTATE_ID);
-    }
+    curr_table = FRONT;
+    help_number = 2;
 }
 
 
-/* TODO izmeniti tajmer za kretanje kocke */
+/* TODO izmeniti tajmer za kretanje kocke
 static void on_timer_move(int value) {
 
     if(value != 1) return;
@@ -264,7 +143,7 @@ static void on_timer_move(int value) {
     x_t = v0*t*t;
     y_t = -t*t/(v0-2);
 
-    /*da upadne u kocku*/
+    // da upadne u kocku
     if(IN(x_t - 7 - camera_x, -EPS, EPS) && IN(y_t + 1 - camera_y, - EPS, EPS)){
         timer_active_fly = 0;
     }
@@ -275,85 +154,7 @@ static void on_timer_move(int value) {
         glutTimerFunc(TIMER_ROTATE_WAIT, on_timer_move, 1);
     }
 }
-
-static void on_keyboard(unsigned char key, int x, int y) {
-    /*broj koji se unosi sa tastature*/
-    unsigned number;
-
-    switch (key) {
-        /* izlaz iz programa ESC */
-        case 27: exit(0);
-
-        /* celu tablu vraca na pocetnu */
-        case 'q':
-            copy_tables(tables[curr_table].original, tables[curr_table].user, N);
-        break;
-
-        /* resi sudoku, moze se primeniti help_number broj puta */
-        case 'r':
-            if(help_number > 0){
-                int a, b; /*NOTE: ne sluze nicemu, mora da se prosledi funkciji*/
-
-                /* ako je tabla popunjena onda je sudoku vec resen */
-                if(is_table_empty(tables[curr_table].original, N, &a, &b)){
-                    /* resavamo sudoku i umanjujemo broj pomoci */
-                    if(solve_sudoku(tables[curr_table].original, N)) {
-                        copy_tables(tables[curr_table].original, tables[curr_table].user, N);
-                        help_number--;
-                    }
-                    else {
-                        error("Sudoku nema resenja!");
-                    }
-                }
-            }
-        break;
-
-        /* krecemo se kroz razlicite sudoku table
-        *  okrecemo kocku na wsad */
-        case 'w':
-        case 's':
-        case 'a':
-        case 'd':
-            /* ne moze se okretati kocka ako se krece */
-            if (!timer_active_fly && !timer_rotate_active) {
-                wsad_key = key;
-                curr_table = next_table(key, curr_table);
-                glutTimerFunc(TIMER_ROTATE_WAIT, on_timer_wsad, TIMER_ROTATE_ID);
-                timer_rotate_active = 1;
-            }
-        break;
-
-        /* pomeranje kamere, zoomIn, zoomOut */
-        case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1; break;
-        case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;  break;
-
-        /* TODO pokretanje kretanaj kocke */
-        case ' ':
-            if (!timer_active_fly) {
-                glutTimerFunc(20, on_timer_move, 1);
-                timer_active_fly = 1;
-            }
-        break;
-
-        /* unos brojeva u tekucu tablu */
-        case '0': case '1': case '2':
-        case '3': case '4': case '5':
-        case '6': case '7': case '8':
-        case '9':
-        number = key - '0';
-        /* ne moze se promeniti polje iz originalne postavke */
-        if(!tables[curr_table].original[tables[curr_table].indy][tables[curr_table].indx]){
-            /* ne moze se upisati broj osim nule ako dodje do konflikta brojeva */
-            if(!(number &&
-                is_conflict(tables[curr_table].user, N, number, tables[curr_table].indy, tables[curr_table].indx))){
-                tables[curr_table].user[tables[curr_table].indy][tables[curr_table].indx] = number;
-            }
-        }
-        break;
-    }
-    glutPostRedisplay();
-}
-
+*/
 
 static void on_display(void) {
 
