@@ -1,29 +1,28 @@
 PROGRAM = sudoku
 CC      = gcc
-CFLAGS  = -g -ansi -Wall -I/usr/X11R6/include -I/usr/pkg/include
-LDFLAGS = -L/usr/X11R6/lib -L/usr/pkg/lib
+CFLAGS  = -g -std=c99 -Wall -Wextra
 LDLIBS  = -lglut -lGLU -lGL -lm
 
 $(PROGRAM): main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o timers.o
-	$(CC) $(LDFLAGS) -o $(PROGRAM) main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o timers.o $(LDLIBS)
-
-sudoku_draw.o: sudoku_draw.c
-	$(CC) -std=c99 -Wall -c sudoku_draw.c
-
-sudoku_func.o: sudoku_func.c
-	$(CC) -std=c99 -Wall -c sudoku_func.c
-
-keyboard.o: keyboard.c
-	$(CC) -std=c99 -Wall -c keyboard.c
-
-timers.o: timers.c
-	$(CC) -std=c99 -Wall -c timers.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 main.o: main.c
-	$(CC) -std=c99 -Wall -c main.c
+	$(CC) $(CFLAGS) -c $<
 
-sudoku_cube.o: sudoku_cube.c
-	$(CC) -std=c99 -Wall -c sudoku_cube.c
+sudoku_draw.o: sudoku_draw.c sudoku_draw.h
+	$(CC) $(CFLAGS) -c $<
+
+sudoku_func.o: sudoku_func.c sudoku_func.h
+	$(CC) $(CFLAGS) -c $<
+
+keyboard.o: keyboard.c keyboard.h
+	$(CC) $(CFLAGS) -c $<
+
+timers.o: timers.c timers.h
+	$(CC) $(CFLAGS) -c $<
+
+sudoku_cube.o: sudoku_cube.c sudoku_cube.h
+	$(CC) $(CFLAGS) -c $<
 
 .PHONY: clean dist
 
