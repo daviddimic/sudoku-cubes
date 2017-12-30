@@ -8,7 +8,7 @@
 #define N 9
 
 /* broj pomoci - resavanje jedne table u potpunosti */
-#define HELP_NUMBER 6
+#define HELP_NUMBER 2
 
 enum position {
     FRONT,

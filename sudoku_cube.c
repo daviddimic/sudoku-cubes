@@ -181,6 +181,7 @@ void draw_elapsed_time(time_t start_time){
     draw_text(buff, 350, 780);
 }
 
+
 int is_cube_solved(T tables[NUM_TABLES], int n_tables, int n_table){
     /* kocka je resena ako je svaki sudoku resen (popunjen) */
     int is_solved = 1;

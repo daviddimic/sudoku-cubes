@@ -34,7 +34,8 @@ zoom in/out: + -\n\
 input number: 1-9\n\
 remove number: 0\n\
 remove all numbers: q\n\
-solve one sudoku: r";
+solve one sudoku: h\n\
+new game: n";
 
 
 /* OpenGL inicijalizacija */
@@ -148,6 +149,16 @@ static void on_display(void) {
     glTranslatef(x_t, y_t, 0);
     glRotatef(60, 0, 1, 0);
     */
+
+    /* ako je kocka resena ispisuje se poruka
+     * i pitanje za dalju igru
+     * kocka se privremeno udaljava
+     */
+    if(is_cube_solved(tables, NUM_TABLES, N)){
+        draw_text("YOU WIN!", 350, 400);
+        draw_text("new game? (yes: n / no: esc)", 270, 340);
+        glTranslatef(0, -0.5, 0);
+    }
 
     glPushMatrix();
         /* rotacija kocke preko wsad */
