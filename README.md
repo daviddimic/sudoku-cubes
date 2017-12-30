@@ -27,5 +27,6 @@ Pokretanje programa sa:
 | `1-9` | Unos broja |
 | `0` | Brisanje unetog broja |
 | `q` | Brisanje svih unetih brojeva na tekucoj tabli |
-| `r` | Pomoc: resava celu tablu (max 2. puta moguce iskoristiti) |
+| `h` | Pomoc: resava celu tablu (max 2. puta moguce iskoristiti) |
+| `n`  | Nova igra  |
 | `ESC` | Izlaz iz programa |
