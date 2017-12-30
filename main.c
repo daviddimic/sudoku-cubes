@@ -24,6 +24,14 @@ extern double zoomInOut;
 /* parametri kretanja */
 extern float x_t, y_t;
 
+static const char* usage_str = " rotate cube: w-s-a-d\n\
+navigate in table: arrow keys\n\
+zoom in/out: + -\n\
+input number: 1-9\n\
+remove number: 0\n\
+remove all numbers: q\n\
+solve one sudoku: r";
+
 
 /* OpenGL inicijalizacija */
 static void initialize(void);
@@ -127,6 +135,10 @@ static void on_display(void) {
             camera_x + zoomInOut, camera_y + zoomInOut, camera_z,
             0, 0, 0,
             0, 1, 0);
+
+
+    /* poruka o koriscenju */
+    draw_text(usage_str, 10, 780);
 
     /* velicina kocke */
     double size = 1;
