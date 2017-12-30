@@ -7,6 +7,9 @@
 #define NUM_TABLES 6
 #define N 9
 
+/* broj pomoci - resavanje jedne table u potpunosti */
+#define HELP_NUMBER 2
+
 enum position {
     FRONT,
     BACK,
@@ -29,7 +32,7 @@ typedef struct {
 } T;
 
 /* ucitava se sudoku kocka - niz tabli */
-void init_tables(T tables[NUM_TABLES], int n_tables, int n_table);
+void init_tables(T tables[NUM_TABLES], int n_tables, int n_table, int* help_number, time_t* start_time);
 
 /* vraca sledecu poziciju table u zavisnosti od tastera w-s-a-d */
 enum position next_table(unsigned char key, enum position curr_table);

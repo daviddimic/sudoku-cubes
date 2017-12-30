@@ -9,9 +9,10 @@
 
 T tables[NUM_TABLES];
 int curr_table;
-int help_number = 2;
+int help_number;
 double zoomInOut;
 unsigned char wsad_key;
+time_t start_time;
 
 void on_specialkeys(int key, int x, int y){
     UNUSED(x);
@@ -73,6 +74,11 @@ void on_keyboard(unsigned char key, int x, int y) {
                     }
                 }
             }
+        break;
+
+        /* nova postavka */
+        case 'n':
+            init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
         break;
 
         /* krecemo se kroz razlicite sudoku table

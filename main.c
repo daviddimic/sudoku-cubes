@@ -25,7 +25,8 @@ extern double zoomInOut;
 extern float x_t, y_t;
 
 /* vreme pri pokretanju programa */
-static time_t start_time;
+extern time_t start_time;
+
 
 static const char* usage_str = " rotate cube: w-s-a-d\n\
 navigate in table: arrow keys\n\
@@ -115,12 +116,9 @@ static void initialize(void) {
     y_rotation = 0;
 
     /* ucitavamo 6 tabli */
-    init_tables(tables, NUM_TABLES, N);
-    /* pocetna tabla je prednja i broj pomoci 2*/
+    init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
+    /* pocetna tabla je prednja */
     curr_table = FRONT;
-    help_number = 2;
-
-    start_time = time(NULL);
 }
 
 

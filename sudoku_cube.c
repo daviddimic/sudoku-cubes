@@ -19,7 +19,7 @@
 /* za ispis sata hh : mm : ss */
 #define MAX_LEN 13
 
-void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
+void init_tables(T tables[NUM_TABLES], int n_tables, int n_table, int* help_number, time_t* start_time){
     srand(time(NULL));
     for (int i = 0; i < n_tables; i++) {
         generate_rand_sudoku(tables[i].original, n_table, 48 - i);
@@ -27,6 +27,8 @@ void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
         tables[i].indx = 0;
         tables[i].indy = 0;
     }
+    *help_number = HELP_NUMBER;
+    *start_time = time(NULL);
 }
 
 enum position next_table(unsigned char key, enum position curr_table){
