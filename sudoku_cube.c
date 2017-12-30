@@ -134,9 +134,11 @@ void draw_cube(T tables[NUM_TABLES], double size, int curr_table){
 
 
 void draw_text(const char* text, double x, double y){
-    glDisable(GL_LIGHTING);
+    glPushMatrix();
 
+    glDisable(GL_LIGHTING);
     glColor3f(0.0, 0.8, 0.0);
+
     glMatrixMode(GL_PROJECTION);
     double matrix[16];
     glGetDoublev(GL_PROJECTION_MATRIX, matrix);
@@ -145,17 +147,21 @@ void draw_text(const char* text, double x, double y){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glPushMatrix();
-        glLoadIdentity();
-        glRasterPos2f(x,y);
-        int len = strlen(text);
-        for(int i = 0; i < len; i++){
-            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]);
+    glLoadIdentity();
+    glRasterPos2f(x,y);
+    int len = strlen(text);
+    for(int i = 0; i < len; i++){
+        if(text[i] == '\n'){
+            y -= 20;
+            glRasterPos2f(x, y);
         }
-    glPopMatrix();
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]);
+    }
 
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixd(matrix);
     glMatrixMode(GL_MODELVIEW);
     glEnable(GL_LIGHTING);
+
+    glPopMatrix();
 }

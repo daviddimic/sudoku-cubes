@@ -38,4 +38,5 @@ void draw_cube(T tables[NUM_TABLES], double size, int curr_table);
 /* iscrtava 2D tekst na poziciji (x,y)*/
 void draw_text(const char* text, double x, double y);
 
+
 #endif /*SUDOKU_CUBE_H_*/
