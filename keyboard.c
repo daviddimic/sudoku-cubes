@@ -58,7 +58,7 @@ void on_keyboard(unsigned char key, int x, int y) {
         break;
 
         /* resi sudoku, moze se primeniti help_number broj puta */
-        case 'r':
+        case 'h':
             if(help_number > 0){
                 int a, b; /*NOTE: ne sluze nicemu, mora da se prosledi funkciji*/
 

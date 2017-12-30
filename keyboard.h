@@ -8,4 +8,5 @@ void on_specialkeys(int key, int x, int y);
 
 void on_keyboard(unsigned char key, int x, int y);
 
+
 #endif /* KEYBOARD_H_ */
