@@ -24,6 +24,9 @@ extern double zoomInOut;
 /* parametri kretanja */
 extern float x_t, y_t;
 
+/* vreme pri pokretanju programa */
+static time_t start_time;
+
 static const char* usage_str = " rotate cube: w-s-a-d\n\
 navigate in table: arrow keys\n\
 zoom in/out: + -\n\
@@ -116,6 +119,8 @@ static void initialize(void) {
     /* pocetna tabla je prednja i broj pomoci 2*/
     curr_table = FRONT;
     help_number = 2;
+
+    start_time = time(NULL);
 }
 
 
@@ -124,7 +129,7 @@ static void on_display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* postavljanej pozicije svetla */
-    GLfloat light_position[] = {-0.5, 0.5, 4, 0};
+    GLfloat light_position[] = {-0.5, 1, 4, 0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glShadeModel(GL_SMOOTH);
 
@@ -135,10 +140,6 @@ static void on_display(void) {
             camera_x + zoomInOut, camera_y + zoomInOut, camera_z,
             0, 0, 0,
             0, 1, 0);
-
-
-    /* poruka o koriscenju */
-    draw_text(usage_str, 10, 780);
 
     /* velicina kocke */
     double size = 1;
@@ -159,10 +160,16 @@ static void on_display(void) {
     glPopMatrix();
 
 
+    /* poruka o koriscenju */
+    draw_text(usage_str, 10, 780);
+
     /* ispis poruke o broju pomoci - resavanje jednog sudoku */
     char help_str[7] = "help: ";
     sprintf(help_str + strlen(help_str), "%d" , help_number);
     draw_text(help_str, 10, 25);
+
+    /* ispis proteklog vremena */
+    draw_elapsed_time(start_time);
 
     glutSwapBuffers();
 }

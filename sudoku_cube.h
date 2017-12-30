@@ -1,6 +1,8 @@
 #ifndef SUDOKU_CUBE_H_
 #define  SUDOKU_CUBE_H_
 
+#include <time.h>
+
 /* broj tabli na kocki */
 #define NUM_TABLES 6
 #define N 9
@@ -38,5 +40,7 @@ void draw_cube(T tables[NUM_TABLES], double size, int curr_table);
 /* iscrtava 2D tekst na poziciji (x,y)*/
 void draw_text(const char* text, double x, double y);
 
+/* ispisuje proteklo vreme igre */
+void draw_elapsed_time(time_t start_time);
 
 #endif /*SUDOKU_CUBE_H_*/

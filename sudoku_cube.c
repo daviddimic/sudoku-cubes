@@ -1,5 +1,4 @@
 #include <string.h>
-#include <time.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <GL/glut.h>
@@ -16,6 +15,9 @@
 #define U_R 0.09
 #define U_G 0.46
 #define U_B 0.23
+
+/* za ispis sata hh : mm : ss */
+#define MAX_LEN 13
 
 void init_tables(T tables[NUM_TABLES], int n_tables, int n_table){
     srand(time(NULL));
@@ -164,4 +166,16 @@ void draw_text(const char* text, double x, double y){
     glEnable(GL_LIGHTING);
 
     glPopMatrix();
+}
+
+void draw_elapsed_time(time_t start_time){
+    time_t current_time = time(NULL);
+
+    time_t passed_time = difftime(current_time, start_time);
+    struct tm *time_format = gmtime(&passed_time);
+    char buff[MAX_LEN + 1];
+    strftime(buff, MAX_LEN, "%H : %M : %S", time_format);
+
+    draw_text(buff, 350, 780);
+
 }
