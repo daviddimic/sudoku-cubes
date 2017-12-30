@@ -14,6 +14,9 @@ double zoomInOut;
 unsigned char wsad_key;
 
 void on_specialkeys(int key, int x, int y){
+    UNUSED(x);
+    UNUSED(y);
+
     switch (key) {
 
     case GLUT_KEY_UP:
@@ -38,6 +41,9 @@ void on_specialkeys(int key, int x, int y){
 }
 
 void on_keyboard(unsigned char key, int x, int y) {
+    UNUSED(x);
+    UNUSED(y);
+
     /*broj koji se unosi sa tastature*/
     unsigned number;
 
