@@ -179,5 +179,18 @@ void draw_elapsed_time(time_t start_time){
     strftime(buff, MAX_LEN, "%H : %M : %S", time_format);
 
     draw_text(buff, 350, 780);
+}
 
+int is_cube_solved(T tables[NUM_TABLES], int n_tables, int n_table){
+    /* kocka je resena ako je svaki sudoku resen (popunjen) */
+    int is_solved = 1;
+    /*NOTE a i b ne sluzi nicemu, mora se proslediti f-ji*/
+    int a, b;
+    for (int i = 0; i < n_tables; i++) {
+        if(is_table_empty(tables[i].original, n_table, &a, &b) ||
+           is_table_empty(tables[i].user, n_table, &a, &b)){
+            is_solved = 0;
+        }
+    }
+    return is_solved;
 }

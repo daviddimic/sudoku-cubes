@@ -8,7 +8,7 @@
 #define N 9
 
 /* broj pomoci - resavanje jedne table u potpunosti */
-#define HELP_NUMBER 2
+#define HELP_NUMBER 6
 
 enum position {
     FRONT,
@@ -45,5 +45,8 @@ void draw_text(const char* text, double x, double y);
 
 /* ispisuje proteklo vreme igre */
 void draw_elapsed_time(time_t start_time);
+
+/* 1 ako je cela kocka resena, 0 inace */
+int is_cube_solved(T tables[NUM_TABLES], int n_tables, int n_table);
 
 #endif /*SUDOKU_CUBE_H_*/
