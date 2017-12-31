@@ -3,7 +3,7 @@ CC      = gcc
 CFLAGS  = -g -std=c99 -Wall -Wextra
 LDLIBS  = -lglut -lGLU -lGL -lm
 
-$(PROGRAM): main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o timers.o
+$(PROGRAM): main.o sudoku_func.o sudoku_draw.o sudoku_cube.o keyboard.o timers.o display.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
 main.o: main.c
@@ -22,6 +22,9 @@ timers.o: timers.c timers.h
 	$(CC) $(CFLAGS) -c $<
 
 sudoku_cube.o: sudoku_cube.c sudoku_cube.h
+	$(CC) $(CFLAGS) -c $<
+
+display.o: display.c display.h
 	$(CC) $(CFLAGS) -c $<
 
 .PHONY: clean dist
