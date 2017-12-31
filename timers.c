@@ -21,8 +21,8 @@ float camera_x, camera_y, camera_z;
 /* parametri kretanaj kocke */
 float x_t, y_t;
 /* parametri spinovanja kocke */
-float spin_y;
-float spin_angle;
+float spin_y = 0;
+float spin_angle = 0;
 
 /* proteklo vreme za spin */
 static float spin_t = 0.02;
