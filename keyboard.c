@@ -3,10 +3,10 @@
 #include "sudoku_func.h"
 #include "timers.h"
 
-
 #include <GL/glut.h>
 #include <stdlib.h>
 
+/* globalne promenljive */
 T tables[NUM_TABLES];
 int curr_table;
 int help_number;
@@ -55,6 +55,7 @@ void on_keyboard(unsigned char key, int x, int y) {
         /* celu tablu vraca na pocetnu */
         case 'q':
             copy_tables(tables[curr_table].original, tables[curr_table].user, N);
+            glutPostRedisplay();
         break;
 
         /* resi sudoku, moze se primeniti help_number broj puta */
@@ -74,11 +75,16 @@ void on_keyboard(unsigned char key, int x, int y) {
                     }
                 }
             }
+            glutPostRedisplay();
         break;
 
         /* nova postavka */
         case 'n':
-            init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
+            if(!timer_spin_active){
+               glutTimerFunc(TIMER_SPIN_WAIT, spin_timer, TIMER_SPIN_ID);
+               timer_spin_active = 1;
+               init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
+            }
         break;
 
         /* krecemo se kroz razlicite sudoku table
@@ -96,8 +102,12 @@ void on_keyboard(unsigned char key, int x, int y) {
         break;
 
         /* pomeranje kamere, zoomIn, zoomOut */
-        case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1; break;
-        case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;  break;
+        case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
+            glutPostRedisplay();
+        break;
+        case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
+            glutPostRedisplay();
+        break;
 
         /* TODO pokretanje kretanaja kocke
         case ' ':
@@ -122,7 +132,7 @@ void on_keyboard(unsigned char key, int x, int y) {
                 tables[curr_table].user[tables[curr_table].indy][tables[curr_table].indx] = number;
             }
         }
+        glutPostRedisplay();
         break;
     }
-    glutPostRedisplay();
 }

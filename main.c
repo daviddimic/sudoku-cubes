@@ -16,6 +16,10 @@ extern int help_number;
 /* uglovi rotacije kocke */
 extern float y_rotation, x_rotation;
 
+/* ugao i translacija spinovanja kocke */
+extern float spin_angle;
+extern float spin_y;
+
 /* koordinate kamere */
 extern float camera_x, camera_y, camera_z;
 /* priblizavanje i udaljavanje pogleda na kocku */
@@ -23,6 +27,7 @@ extern double zoomInOut;
 
 /* parametri kretanja */
 extern float x_t, y_t;
+
 
 /* vreme pri pokretanju programa */
 extern time_t start_time;
@@ -103,7 +108,6 @@ static void initialize(void) {
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coef);
     glMateriali(GL_FRONT, GL_SHININESS, shininess);
 
-
     x_t = 0;
     y_t = 0;
 
@@ -161,9 +165,14 @@ static void on_display(void) {
     }
 
     glPushMatrix();
+        /* spinovanje kocke za novu igru */
+        glTranslatef(0, spin_y, 0);
+        glRotatef(-spin_angle, 1, 0, 0);
+
         /* rotacija kocke preko wsad */
         glRotatef(x_rotation, 1, 0, 0);
         glRotatef(y_rotation, 0, 1, 0);
+
         /* crta se kocka */
         draw_cube(tables, size, curr_table);
     glPopMatrix();
