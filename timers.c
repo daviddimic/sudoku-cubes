@@ -1,36 +1,25 @@
 #include "timers.h"
+#include "globalvars.h"
 #include "sudoku_cube.h"
 
 #include <GL/glut.h>
 #include <assert.h>
 
-/* externe promenljive */
-/* da li su animacije u toku */
+/* globalne promenljive
+ * inicijalizacija aktivnosti tajmera
+ */
 int timer_rotate_active = 0;
 int timer_move_active = 0;
 int timer_spin_active = 0;
+int timer_jump_active = 0;
 
-/* za tajmer okretanja kocke on_timer_wsad */
-char unsigned wsad_key;
-/* tekuca tabla */
-int curr_table;
-/* rotacija kocke */
-float x_rotation, y_rotation;
-/* pozicija kamera */
-float camera_x, camera_y, camera_z;
-/* parametri kretanaj kocke */
-float x_t, y_t;
-/* parametri spinovanja kocke */
-float spin_y = 0;
-float spin_angle = 0;
 
-/* proteklo vreme za spin */
+/* vreme kretanja kocke */
+static float move_t = 0;
+/* vreme spinovanja kocke */
 static float spin_t = 0.02;
-/* proteklo vreme za kretanje kocke */
-static float t;
-
-/*TODO rand menjati pocetna brzina kretanja kocke */
-static const float v0 = 6;
+/* vreme skakanja */
+static float jump_t = 0;
 
 
 /* pomocna f-ja: za koliko treba rotirati kocku i kada zaustaviti tajmer */
@@ -127,15 +116,14 @@ void spin_timer(int value) {
     /* rotacija */
     spin_angle =  360*(2*v0spin/G)/(spin_t + 0.0001);
     /*translacija - jednacina hitac u vis */
-    spin_y = v0spin*spin_t - G*spin_t*spin_t/2 + 0.12;
+    spin_y = v0spin*spin_t - G*spin_t*spin_t/2;
 
     /* kada objekat padne na zemlju zaustavlja se animacija */
-    if( (spin_t - 2*v0spin/G >= 0.03) && (spin_t - 2*v0spin/G <= 0.06) ){
+    if( (spin_t - 2*v0spin/G >= -0.01) && (spin_t - 2*v0spin/G <= 0.01) ){
         spin_t = 0.02;
         spin_y = 0;
         spin_angle = 0;
         timer_spin_active = 0;
-        return;
     }
 
     glutPostRedisplay();
@@ -145,19 +133,55 @@ void spin_timer(int value) {
     }
 }
 
+void on_timer_jump(int value){
+    if(value != TIMER_JUMP_ID) return;
+
+    jump_t += .02;
+
+    /*translacija - jednacina hitac u vis */
+    jump = v0jump*jump_t - G*jump_t*jump_t/2;
+    /* kada padne na zemlju zaustavlja se animacija */
+    if( (jump_t - 2*v0jump/G >= -0.01) && (jump_t - 2*v0jump/G <= 0.01) ){
+        jump_t = 0;
+        jump = 0;
+        timer_jump_active = 0;
+    }
+
+    glutPostRedisplay();
+
+    if(timer_jump_active){
+        glutTimerFunc(TIMER_JUMP_WAIT, on_timer_jump, TIMER_JUMP_ID);
+    }
+}
+
+/* parametarska jednacina duzi */
+static void lineAB(float Ax, float Az, float Bx, float Bz, float t){
+    x_t = Ax + t*(Bx - Ax);
+    z_t = Az + t*(Bz - Az);
+}
+
 /* TODO izmeniti tajmer za kretanje kocke */
 void on_timer_move(int value) {
 
     if(value != TIMER_MOVE_ID) return;
 
-    t += 0.05;
+    move_t += 0.05;
 
-    x_t = v0*t*t;
-    y_t = -t*t/(v0-2);
+    /* duz od rand tacke do kamere */
+    lineAB(cube_start_x, cube_start_z, camera_x, camera_z, move_t);
 
-    /* da upadne u kocku */
-    if(IN(x_t - 7 - camera_x, -EPS, EPS) && IN(y_t + 1 - camera_y, - EPS, EPS)){
+    /* kraj duzi */
+    if(move_t >= 1){
+        /* ako je pogodjena kamera kocka se stavlja u (0,0) i resava se*/
+        /*x_t = 0;
+        z_t = 0;*/
+        /* pocetni polozaj kocke */
         timer_move_active = 0;
+        /*sleep(1);
+        srand(time(NULL));
+        cube_start_x = -(rand()%50 + 5);
+        cube_start_z = -(rand()%50 + 5);
+        move_t = 0;*/
     }
 
     glutPostRedisplay();
