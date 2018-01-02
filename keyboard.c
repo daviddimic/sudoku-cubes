@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include "globalvars.h"
 #include "sudoku_cube.h"
 #include "sudoku_func.h"
 #include "timers.h"
@@ -6,13 +7,9 @@
 #include <GL/glut.h>
 #include <stdlib.h>
 
-/* globalne promenljive */
-T tables[NUM_TABLES];
-int curr_table;
-int help_number;
-double zoomInOut;
+/* globalna */
 unsigned char wsad_key;
-time_t start_time;
+
 
 void on_specialkeys(int key, int x, int y){
     UNUSED(x);
@@ -78,7 +75,7 @@ void on_keyboard(unsigned char key, int x, int y) {
             glutPostRedisplay();
         break;
 
-        /* nova postavka */
+        /* nova igra - spinuje se kocka */
         case 'n':
             if(!timer_spin_active){
                glutTimerFunc(TIMER_SPIN_WAIT, spin_timer, TIMER_SPIN_ID);
@@ -101,6 +98,14 @@ void on_keyboard(unsigned char key, int x, int y) {
             }
         break;
 
+        /* skakanje posmatraca (kamere) */
+        case ' ':
+            if (!timer_jump_active) {
+                glutTimerFunc(TIMER_JUMP_WAIT, on_timer_jump, TIMER_JUMP_ID);
+                timer_jump_active = 1;
+            }
+        break;
+
         /* pomeranje kamere, zoomIn, zoomOut */
         case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
             glutPostRedisplay();
@@ -109,14 +114,6 @@ void on_keyboard(unsigned char key, int x, int y) {
             glutPostRedisplay();
         break;
 
-        /* TODO pokretanje kretanaja kocke
-        case ' ':
-            if (!timer_move_active) {
-                glutTimerFunc(TIMER_MOVE_WAIT, on_timer_move, TIMER_MOVE_ID);
-                timer_move_active = 1;
-            }
-        break;
-        */
 
         /* unos brojeva u tekucu tablu */
         case '0': case '1': case '2':
