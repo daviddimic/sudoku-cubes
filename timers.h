@@ -22,7 +22,7 @@
 /* pocetna brzina bacanja za spin */
 #define v0spin 7
 /* pocetna brzina skoka */
-#define v0jump 9
+#define v0jump 5
 
 /* globalne promenljive */
 extern int timer_rotate_active;

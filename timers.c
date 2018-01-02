@@ -160,28 +160,53 @@ static void lineAB(float Ax, float Az, float Bx, float Bz, float t){
     z_t = Az + t*(Bz - Az);
 }
 
-/* TODO izmeniti tajmer za kretanje kocke */
+/* da li je kocka pogodila kameru */
+static int in_camera(){
+    /* skok kamere visi od kocke */
+    if(jump + camera_y < 1 /*TODO velicina kocke*/)
+        return 1;
+
+    return 0;
+}
+
 void on_timer_move(int value) {
 
     if(value != TIMER_MOVE_ID) return;
 
-    move_t += 0.05;
+    /* polozaj kamere dok se kocke krecu */
+    camera_x = 1;
+    camera_y = 0.2;
+    camera_z = 1;
 
+
+    move_t += 0.03;
     /* duz od rand tacke do kamere */
     lineAB(cube_start_x, cube_start_z, camera_x, camera_z, move_t);
 
-    /* kraj duzi */
-    if(move_t >= 1){
-        /* ako je pogodjena kamera kocka se stavlja u (0,0) i resava se*/
-        /*x_t = 0;
-        z_t = 0;*/
-        /* pocetni polozaj kocke */
-        timer_move_active = 0;
-        /*sleep(1);
-        srand(time(NULL));
-        cube_start_x = -(rand()%50 + 5);
-        cube_start_z = -(rand()%50 + 5);
-        move_t = 0;*/
+
+    if(move_t >= 0.99 && move_t <= 1.05) {
+        if(in_camera()){
+            /* ako je pogodjena kamera kocka se stavlja u (0,0) i resava se kocka */
+            move_t = 0;
+            x_t = 0;
+            z_t = 0;
+            camera_x = 1;
+            camera_y = 0.8;
+            camera_z = 1.5;
+            timer_move_active = 0;
+        }
+    }
+    /* ako nije pogodjena kocka sa rand pozicije ponovo gadja
+     * parametar move_t ide duplo duze da uspori prebrzo generisanje kocki
+     */
+    else if(move_t >= 2) {
+       srand(time(NULL));
+       /* inicijalizuje se nova kocka */
+       init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
+       /* pocetni polozaj kocke */
+       cube_start_x = -(rand()%40 + 10);
+       cube_start_z = -(rand()%40 + 10);
+       move_t = 0;
     }
 
     glutPostRedisplay();

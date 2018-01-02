@@ -15,7 +15,8 @@ input number: 1-9\n\
 remove number: 0\n\
 remove all numbers: q\n\
 solve one sudoku: h\n\
-new game: n";
+new game: n\n\
+jump: space";
 
 
 void initialize(void) {
@@ -50,10 +51,10 @@ void initialize(void) {
 
     /* inicijalizacija globalnih promenljivih */
 
-    /* pocetni polozaj kocke */
+    /* pocetni polozaj kocke, u II kvadrantu xz ravni */
     srand(time(NULL));
-    cube_start_x = -(rand()%50 + 5);
-    cube_start_z = -(rand()%50 + 5);
+    cube_start_x = -(rand()%40 + 10);
+    cube_start_z = -(rand()%40 + 10);
 
     x_t = cube_start_x;
     z_t = cube_start_z;
@@ -113,15 +114,15 @@ void on_display(void) {
     glLoadIdentity();
     gluLookAt(
             camera_x + zoomInOut, camera_y + zoomInOut + jump, camera_z,
-            0, 0, 0,
+            0, jump, 0,
             0, 1, 0);
 
     /* velicina kocke */
     double size = 1;
 
-    /* TODO kretanje kocke ka posmatracu i izbegavanje
+    /* kretanje kocke ka posmatracu */
     glTranslatef(x_t, 0, z_t);
-    */
+    glRotatef(10*x_t, 1, 1, 1);
 
     /* ako je kocka resena ispisuje se poruka
      * i pitanje za dalju igru
