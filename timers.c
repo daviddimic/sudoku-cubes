@@ -187,6 +187,8 @@ void on_timer_move(int value) {
     if(move_t >= 0.99 && move_t <= 1.05) {
         if(in_camera()){
             /* ako je pogodjena kamera kocka se stavlja u (0,0) i resava se kocka */
+            /* inicijalizuje se nova kocka */
+            init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
             move_t = 0;
             x_t = 0;
             z_t = 0;
@@ -201,8 +203,6 @@ void on_timer_move(int value) {
      */
     else if(move_t >= 2) {
        srand(time(NULL));
-       /* inicijalizuje se nova kocka */
-       init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
        /* pocetni polozaj kocke */
        cube_start_x = -(rand()%40 + 10);
        cube_start_z = -(rand()%40 + 10);
