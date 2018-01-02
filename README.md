@@ -8,7 +8,7 @@ Sudoku kocka je resena ako su svih 6 tabli popunjene, onda korisnik moze odabrat
 
 ![sudoku-kocka](https://raw.githubusercontent.com/MATF-RG17/RG098-sudoku-kocke/master/Screenshots/2017-12-30.png)
 
-## Usage
+## Installation
 
 Kompajliranje sa:
 
@@ -18,6 +18,7 @@ Pokretanje programa sa:
 
 `./sudoku`
 
+## Usage
 
 | **Key** | **Opis** |
 | :---  | :--- |
