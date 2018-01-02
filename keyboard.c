@@ -106,12 +106,20 @@ void on_keyboard(unsigned char key, int x, int y) {
             }
         break;
 
-        /* pomeranje kamere, zoomIn, zoomOut */
-        case '+': zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
-            glutPostRedisplay();
+        /* pomeranje kamere, zoomIn, zoomOut
+         * ne moze dok se kocka krecem
+         */
+        case '+':
+            if (!timer_move_active){
+                zoomInOut = zoomInOut <= -3.5 ? zoomInOut : zoomInOut - 0.1;
+                glutPostRedisplay();
+            }
         break;
-        case '-': zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
-            glutPostRedisplay();
+        case '-':
+            if (!timer_move_active){
+                zoomInOut = zoomInOut >= 1.5 ? zoomInOut : zoomInOut + 0.1;
+                glutPostRedisplay();
+            }
         break;
 
 
