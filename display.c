@@ -1,37 +1,11 @@
 #include "display.h"
+#include "globalvars.h"
 #include "keyboard.h"
+#include "timers.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <GL/glut.h>
-
-
-/* tekuca tabla koja se resava */
-int curr_table;
-/* niz tabli */
-T tables[NUM_TABLES];
-/* broj pomoci za resavanje sudoku */
-int help_number;
-
-/* uglovi rotacije kocke */
-float x_rotation;
-float y_rotation;
-
-/* ugao i translacija spinovanja kocke */
-float spin_angle;
-float spin_y;
-
-/* koordinate kamere */
-float camera_x, camera_y, camera_z;
-/* priblizavanje i udaljavanje pogleda na kocku */
-double zoomInOut;
-
-/* parametri kretanja */
-float x_t, y_t;
-
-
-/* vreme pri pokretanju programa */
-time_t start_time;
 
 
 static const char* usage_str = " rotate cube: w-s-a-d\n\
@@ -42,6 +16,7 @@ remove number: 0\n\
 remove all numbers: q\n\
 solve one sudoku: h\n\
 new game: n";
+
 
 void initialize(void) {
     glClearColor(0.3, 0.3, 0.3, 0);
@@ -73,24 +48,56 @@ void initialize(void) {
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coef);
     glMateriali(GL_FRONT, GL_SHININESS, shininess);
 
-    x_t = 0;
-    y_t = 0;
+    /* inicijalizacija globalnih promenljivih */
 
-    zoomInOut = 0;
+    /* pocetni polozaj kocke */
+    srand(time(NULL));
+    cube_start_x = -(rand()%50 + 5);
+    cube_start_z = -(rand()%50 + 5);
+
+    x_t = cube_start_x;
+    z_t = cube_start_z;
 
     camera_x = 1;
     camera_y = 0.8;
     camera_z = 1.5;
 
+    zoomInOut = 0;
+
     x_rotation = 0;
     y_rotation = 0;
+
+    spin_angle = 0;
+    spin_y = 0;
+
+    jump = 0;
 
     /* ucitavamo 6 tabli */
     init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
     /* pocetna tabla je prednja */
     curr_table = FRONT;
+
+    /* odmah se pokrece animacija
+     * kocke sa rand pozicije gadjaju kameru
+    */
+    if (!timer_move_active) {
+        glutTimerFunc(TIMER_MOVE_WAIT, on_timer_move, TIMER_MOVE_ID);
+        timer_move_active = 1;
+    }
 }
 
+static void draw_all_msg(void){
+    /* poruka o koriscenju */
+    draw_text(usage_str, 10, 780);
+
+    /* ispis poruke o broju pomoci - resavanje jednog sudoku */
+    char help_str[7] = "help: ";
+    sprintf(help_str + strlen(help_str), "%d" , help_number);
+    draw_text(help_str, 10, 25);
+
+    /* ispis proteklog vremena */
+    draw_elapsed_time(start_time);
+}
 
 void on_display(void) {
 
@@ -105,7 +112,7 @@ void on_display(void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
-            camera_x + zoomInOut, camera_y + zoomInOut, camera_z,
+            camera_x + zoomInOut, camera_y + zoomInOut + jump, camera_z,
             0, 0, 0,
             0, 1, 0);
 
@@ -113,10 +120,7 @@ void on_display(void) {
     double size = 1;
 
     /* TODO kretanje kocke ka posmatracu i izbegavanje
-    glTranslatef(-5, 1, -5);
-    glRotatef(-45, 0, 1, 0);
-    glTranslatef(x_t, y_t, 0);
-    glRotatef(60, 0, 1, 0);
+    glTranslatef(x_t, 0, z_t);
     */
 
     /* ako je kocka resena ispisuje se poruka
@@ -142,25 +146,15 @@ void on_display(void) {
         draw_cube(tables, size, curr_table);
     glPopMatrix();
 
-
-    /* poruka o koriscenju */
-    draw_text(usage_str, 10, 780);
-
-    /* ispis poruke o broju pomoci - resavanje jednog sudoku */
-    char help_str[7] = "help: ";
-    sprintf(help_str + strlen(help_str), "%d" , help_number);
-    draw_text(help_str, 10, 25);
-
-    /* ispis proteklog vremena */
-    draw_elapsed_time(start_time);
+    /* ispis celog 2D teksta */
+    draw_all_msg();
 
     glutSwapBuffers();
 }
 
 void on_reshape(int width, int height){
     glViewport(0, 0, width, height);
-    /* Podesava se projekcija. */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (float)width/height, 0.2, 50);
+    gluPerspective(60, (float)width/height, 0.2, 40);
 }
