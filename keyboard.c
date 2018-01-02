@@ -75,9 +75,11 @@ void on_keyboard(unsigned char key, int x, int y) {
             glutPostRedisplay();
         break;
 
-        /* nova igra - spinuje se kocka */
+        /* nova igra - spinuje se kocka
+         * onemoguceno ako se kocka krece
+         */
         case 'n':
-            if(!timer_spin_active){
+            if(!timer_move_active && !timer_spin_active){
                glutTimerFunc(TIMER_SPIN_WAIT, spin_timer, TIMER_SPIN_ID);
                timer_spin_active = 1;
                init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
