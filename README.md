@@ -29,4 +29,5 @@ Pokretanje programa sa:
 | `q` | Brisanje svih unetih brojeva na tekucoj tabli |
 | `h` | Pomoc: resava celu tablu (max 2. puta moguce iskoristiti) |
 | `n`  | Nova igra  |
+| `space`  | Skoci |
 | `ESC` | Izlaz iz programa |
