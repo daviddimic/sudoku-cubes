@@ -195,3 +195,12 @@ int is_cube_solved(T tables[NUM_TABLES], int n_tables, int n_table){
     }
     return is_solved;
 }
+
+/* da li je kocka pogodila kameru */
+int cube_in_camera(float jump, float camera_y, float size){
+    /* skok kamere visi od kocke */
+    if(jump + camera_y < size)
+        return 1;
+
+    return 0;
+}

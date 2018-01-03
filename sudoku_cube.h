@@ -49,4 +49,8 @@ void draw_elapsed_time(time_t start_time);
 /* 1 ako je cela kocka resena, 0 inace */
 int is_cube_solved(T tables[NUM_TABLES], int n_tables, int n_table);
 
+/* da li je kocka pogodila kameru */
+int cube_in_camera(float jump, float camera_y, float size);
+
+
 #endif /*SUDOKU_CUBE_H_*/
