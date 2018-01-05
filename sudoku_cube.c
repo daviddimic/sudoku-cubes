@@ -86,11 +86,14 @@ enum position next_table(unsigned char key, enum position curr_table){
     }
 }
 
-
+/* crta se 6 tabli i namestaju tako da cine kocku */
 void draw_cube(T tables[NUM_TABLES], double size, int curr_table){
     /*FRONT*/
     glPushMatrix();
         glTranslatef(0, 0, size/2);
+        /* korisnicka i originalna tabla se iscrtavaju razlicitom bojom
+         * pa se crtaju jedna preko druge
+         */
         draw_table(tables[FRONT].original, tables[FRONT].indx, tables[FRONT].indy, curr_table == FRONT, -size/2, -size/2, size, O_R, O_G, O_B);
         draw_table(tables[FRONT].user, tables[FRONT].indx, tables[FRONT].indy, curr_table == FRONT, -size/2, -size/2, size, U_R, U_G, U_B);
     glPopMatrix();
