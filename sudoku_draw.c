@@ -17,6 +17,11 @@
 #define CELL_BORDER_G 0
 #define CELL_BORDER_B 0
 
+/* deblji okvir */
+#define LINE_WIDTH_BOLD 4
+/* tanji okvir */
+#define LINE_WIDTH 2
+
 void draw_table(const int table[][N], int indx, int indy, int border, double x, double y, double width, double r, double g, double b){
     draw_numbers(table, indx, indy, border, x, y, width, r, g, b);
     draw_grid(x, y, width);
@@ -24,9 +29,9 @@ void draw_table(const int table[][N], int indx, int indy, int border, double x, 
 
 
 void draw_grid(double x, double y, double width){
-    /*okvir table*/
+    /* okvir table */
     glColor3f(TABLE_BORDER_LINES_R, TABLE_BORDER_LINES_G, TABLE_BORDER_LINES_B);
-    glLineWidth(4);
+    glLineWidth(LINE_WIDTH_BOLD);
 
     glBegin(GL_LINE_LOOP);
         glVertex2f(x + 0, y + 0);
@@ -38,12 +43,12 @@ void draw_grid(double x, double y, double width){
     double width_cell = width/9.0;
     double height_cell = width/9.0;
 
-    /*linije unutar table*/
+    /* linije unutar table */
     for(int i = 1; i < N; i++){
-        glLineWidth(2);
-        /*podebljana linija na svako trece*/
+        glLineWidth(LINE_WIDTH);
+        /* podebljana linija na svako trece */
         if(i%3 == 0){
-            glLineWidth(4);
+            glLineWidth(LINE_WIDTH_BOLD);
         }
 
         glBegin(GL_LINES);
@@ -68,7 +73,7 @@ void draw_grid(double x, double y, double width){
 
 /*crta crveni okvir tekuce pozicije na tabli*/
 static void draw_cell_border(double x, double y, double size){
-    glLineWidth(5);
+    glLineWidth(LINE_WIDTH_BOLD + 1);
     glBegin(GL_LINE_LOOP);
         glColor3f(CELL_BORDER_R, CELL_BORDER_G, CELL_BORDER_B);
         glVertex2f(x , -y);
@@ -87,23 +92,23 @@ void draw_numbers(const int table[][N], int indx, int indy, int border, double x
     /* velicina broja */
     double size = height_cell/3.0;
 
-    /* razmak unutar celije izmedju broja i ivica celije*/
+    /* razmak unutar celije izmedju broja i ivica celije */
     double spaceX = (width_cell - size)/2.0;
     double spaceY = (height_cell - 2*size)/2.0;
 
-    /* pocetne vrednost iscrtavanja brojeva koje ce se menjati*/
+    /* pocetne vrednost iscrtavanja brojeva koje ce se menjati */
     double x_curr = x + spaceX;
     double y_curr = (y + table_width) - height_cell + spaceY;
 
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++){
 
-            /* crvenim se boji okvir u oznacenom polju*/
+            /* crvenim se boji okvir u oznacenom polju */
             if(border && i == indy && j == indx){
                 draw_cell_border(x_curr - spaceX, -y_curr - height_cell + spaceY, width_cell);
             }
 
-            /* nule ne iscrtavamo*/
+            /* nule ne iscrtavamo */
             if(table[i][j]) {
                 glColor3f(r, g, b);
                 draw_digit(table[i][j], x_curr, y_curr, size);
