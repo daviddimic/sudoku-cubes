@@ -71,7 +71,8 @@ void on_timer_wsad(int value) {
 
     /* NOTE
      * curr_table ovde treba shvatiti kao SLEDECA tabla
-     * jer se prvo postavlja curr_table sledece table pa tek onda vrsi rotacija
+     * jer kada se registruje neki od tastera w, s, a, d
+     * prvo se poziva next_table pa onda rotira kocka
      */
 
     switch (wsad_key) {
@@ -170,7 +171,6 @@ static void lineAB(float Ax, float Az, float Bx, float Bz, float t){
     x_t = Ax + t*(Bx - Ax);
     z_t = Az + t*(Bz - Az);
 }
-
 
 
 void on_timer_move(int value) {
