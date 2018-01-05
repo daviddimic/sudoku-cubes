@@ -51,12 +51,14 @@ void on_keyboard(unsigned char key, int x, int y) {
 
         /* celu tablu vraca na pocetnu */
         case 'q':
+        case 'Q':
             copy_tables(tables[curr_table].original, tables[curr_table].user, N);
             glutPostRedisplay();
         break;
 
         /* resi sudoku, moze se primeniti help_number broj puta */
         case 'h':
+        case 'H':
             if(help_number > 0){
                 int a, b; /*NOTE: ne sluze nicemu, mora da se prosledi funkciji*/
 
@@ -79,6 +81,7 @@ void on_keyboard(unsigned char key, int x, int y) {
          * onemoguceno ako se kocka krece
          */
         case 'n':
+        case 'N':
             if(!timer_move_active && !timer_spin_active){
                glutTimerFunc(TIMER_SPIN_WAIT, spin_timer, TIMER_SPIN_ID);
                timer_spin_active = 1;
