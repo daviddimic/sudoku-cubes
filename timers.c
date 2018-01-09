@@ -168,8 +168,10 @@ void on_timer_jump(int value){
 
 /* parametarska jednacina duzi */
 static void lineAB(float Ax, float Az, float Bx, float Bz, float t){
-    x_t = Ax + t*(Bx - Ax);
-    z_t = Az + t*(Bz - Az);
+    /* u pocetku je kocka sporija, a onda sve vise ubrzava ka kraju duzi
+     * umesto t -> t^2 */
+    x_t = Ax + t*t*(Bx - Ax);
+    z_t = Az + t*t*(Bz - Az);
 }
 
 
@@ -182,7 +184,7 @@ void on_timer_move(int value) {
     camera_y = 0.2;
     camera_z = 1;
 
-    move_t += 0.03;
+    move_t += 0.01;
 
     /* duz od rand tacke do kamere */
     lineAB(cube_start_x, cube_start_z, camera_x, camera_z, move_t);
@@ -201,13 +203,11 @@ void on_timer_move(int value) {
             timer_move_active = 0;
         }
     }
-    /* ako nije pogodjena kocka sa rand pozicije ponovo gadja
-     * parametar move_t ide duplo duze da uspori prebrzo generisanje kocki
-     */
-    else if(move_t >= 2) {
+    /* ako nije pogodjena kocka sa rand pozicije ponovo gadja */
+    else if(move_t > 1) {
        srand(time(NULL));
        /* pocetni polozaj kocke */
-       cube_start_x = -(rand()%40 + 10);
+       cube_start_x = -(rand()%50 + 10);
        cube_start_z = -(rand()%40 + 10);
        move_t = 0;
     }

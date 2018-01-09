@@ -52,7 +52,7 @@ void initialize(void) {
 
     /* pocetni polozaj kocke, u II kvadrantu xz ravni */
     srand(time(NULL));
-    cube_start_x = -(rand()%40 + 10);
+    cube_start_x = -(rand()%50 + 10);
     cube_start_z = -(rand()%40 + 10);
 
     x_t = cube_start_x;
@@ -156,5 +156,5 @@ void on_reshape(int width, int height){
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (float)width/height, 0.2, 40);
+    gluPerspective(60, (float)width/height, 0.2, 50);
 }
