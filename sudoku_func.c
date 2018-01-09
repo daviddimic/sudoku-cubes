@@ -228,8 +228,11 @@ static int sudoku_classic(int * grid, int empty)
 /*kraj preuzetog koda*/
 
 
-/* prilagodjena za matricu */
+/* generisanje random sudokua - prilagodjena za matricu
+ * num_empty je broj broj praznina u generisanoj tabli - tezina */
 void generate_rand_sudoku(int table[][N], const int n, const int num_empty){
+    /* preuzeta fja radi sa nizom sa 81 clanom
+       koji mora biti inicijalizovan na 0 */
     int pom_table[N*N] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -241,10 +244,14 @@ void generate_rand_sudoku(int table[][N], const int n, const int num_empty){
 	0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-
+    /* generise u potpunosti popunjen validni sudoku (koji ima jedinstveno resenje) nad nizom */
 	sudoku_generate(pom_table);
+    /* pravi random 'rupe' u generisanoj tabli kojih ima num_empty
+     * stavlja num_empty broj nula na random mesta */
 	sudoku_classic(pom_table, num_empty);
 
+    /* u ostatku mog koda se radi sa matricom 9x9
+     * pa se niz od 81 clan kopira u matricu i sa njom se dalje radi */
 	for(int i=0; i<n*n; i++){
 		table[i/N][i%N] = pom_table[i];
 	}
