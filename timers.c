@@ -5,6 +5,8 @@
 #include <GL/glut.h>
 #include <assert.h>
 
+#include <unistd.h>
+
 /* globalne promenljive
  * inicijalizacija aktivnosti tajmera
  */
@@ -189,14 +191,24 @@ void on_timer_move(int value) {
     /* duz od rand tacke do kamere */
     lineAB(cube_start_x, cube_start_z, camera_x, camera_z, move_t);
 
-    if(move_t >= 0.99 && move_t <= 1.05) {
+    if(move_t >= 1 && move_t <= 1.02) {
         if(cube_in_camera(jump, camera_y, 1)){
             /* ako je pogodjena kamera kocka se stavlja u (0,0) i resava se kocka */
             /* inicijalizuje se nova kocka */
             init_tables(tables, NUM_TABLES, N, &help_number, &start_time);
+
+            /* da se kocka ne bi odjednom postavila u (0,0) kada je pogodjena kamera */
             move_t = 0;
+            sleep(1);
+            /* vracanje kocke u (0,0)*/
             x_t = 0;
             z_t = 0;
+
+            /* resetovanje animacija i pogleda na kocku */
+            jump_t = 0;
+            jump = 0;
+            timer_jump_active = 0;
+
             camera_x = 1;
             camera_y = 0.8;
             camera_z = 1.5;
@@ -204,7 +216,7 @@ void on_timer_move(int value) {
         }
     }
     /* ako nije pogodjena kocka sa rand pozicije ponovo gadja */
-    else if(move_t > 1) {
+    else if(move_t >= 1) {
        srand(time(NULL));
        /* pocetni polozaj kocke */
        cube_start_x = -(rand()%50 + 10);
