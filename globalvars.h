@@ -36,5 +36,7 @@ extern float x_t, z_t;
 /* vreme pri pokretanju programa */
 extern time_t start_time;
 
+extern float window_width, window_height;
+
 
 #endif /* GLOBALVARS_H_ */

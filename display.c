@@ -7,6 +7,8 @@
 #include <string.h>
 #include <GL/glut.h>
 
+/* osetljivost misa */
+#define SENSITIVITY 200
 
 static const char* usage_str = " rotate cube: w-s-a-d\n\
 navigate in table: arrow keys\n\
@@ -18,6 +20,11 @@ solve one sudoku: h\n\
 new game: n\n\
 jump: space";
 
+/*kooridnate misa*/
+float mouse_x = 0, mouse_y = 0;
+
+/*matrica za misa*/
+static float matrix[16];
 
 void initialize(void) {
     glClearColor(0.3, 0.3, 0.3, 0);
@@ -84,6 +91,11 @@ void initialize(void) {
         glutTimerFunc(TIMER_MOVE_WAIT, on_timer_move, TIMER_MOVE_ID);
         timer_move_active = 1;
     }
+
+    /*inicijalizacija matrice za misa*/
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
 }
 
 static void draw_all_msg(void){
@@ -134,6 +146,10 @@ void on_display(void) {
     }
 
     glPushMatrix();
+
+    /* pomeranje kamere misem ne utice na kretanje kocke */
+    glMultMatrixf(matrix);
+
         /* spinovanje kocke za novu igru */
         glTranslatef(0, spin_y, 0);
         glRotatef(-spin_angle, 1, 0, 0);
@@ -153,8 +169,36 @@ void on_display(void) {
 }
 
 void on_reshape(int width, int height){
+    window_width = width;
+    window_height = height;
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60, (float)width/height, 0.2, 50);
+}
+
+/*f-ja za reagovanje na misa*/
+void on_mouse_move(int x, int y){
+    int diffX = x - mouse_x;
+    int diffY = y - mouse_y;
+    mouse_x = x;
+    mouse_y = y;
+
+    glMatrixMode(GL_MODELVIEW);
+
+    glPushMatrix();
+        glLoadIdentity();
+        glRotatef(SENSITIVITY * diffX / window_width, 0, 1, 0);
+        glRotatef(SENSITIVITY * diffY / window_height, 1, 0, 0);
+        glMultMatrixf(matrix);
+        glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
+    glPopMatrix();
+}
+
+/*postavljanje kooricnata misa na trenutnu poziciju*/
+void on_mouse(int button, int state, int x, int y){
+    UNUSED(button);
+    UNUSED(state);
+    mouse_x = x;
+    mouse_y = y;
 }

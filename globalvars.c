@@ -19,4 +19,6 @@ float cube_start_x, cube_start_z;
 
 float x_t, z_t;
 
+float window_width, window_height;
+
 time_t start_time;
