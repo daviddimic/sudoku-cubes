@@ -1,4 +1,4 @@
-# sudoku-qubes
+# sudoku-cubes
 Korisnik izbegava kocke koje ga gadjaju tako sto skace. Kada ga pogodi onda resava sudoku kocku: kocka koja sa svake strane ima razlicitu postavku klasicne sudoku igre.
 Na raspolaganju ima 2 pomoci: mogucnost da se u potpunosti resi jedan sudoku.
 Onemoguceno je da se na neko polje unese broj ako se tu ne moze nalaziti (ako postoji isti u vrsti, koloni ili 3x3 bloku), sto znaci da ako je sudoku u potpunosti popunjen on je resen tacno.
